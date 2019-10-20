@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PetStore.Models
 {
 
-    public class AppIdentityDbContext : IdentityDbContext<IdentityUser>
+    public class AppIdentityDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)

@@ -30,7 +30,7 @@ namespace PetStore
                 options.UseSqlServer(
                     Configuration["Data:PetStoreIdentity:ConnectionString"]));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PetStore.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         #region fields
@@ -20,7 +21,7 @@ namespace PetStore.Controllers
             _cart = cartService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin, Manager")]
         public ViewResult List()
         {
             ViewBag.Current = "Orders";
@@ -29,7 +30,7 @@ namespace PetStore.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin, Manager")]
         public IActionResult MarkShipped(int orderID)
         {
             Order order = _repository.Orders

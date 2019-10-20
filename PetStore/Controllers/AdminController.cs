@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PetStore.Controllers
 {
-    [Authorize]
     public class AdminController : Controller
     {
         private IProductRepository _repository;
@@ -15,6 +14,7 @@ namespace PetStore.Controllers
             _repository = repo;
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         public ViewResult Index()
         {
             ViewBag.Current = "Products";
@@ -22,11 +22,13 @@ namespace PetStore.Controllers
             return View(_repository.Products);
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         public ViewResult Edit(int productId) =>
             View(_repository.Products
                 .FirstOrDefault(p => p.ID == productId));
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
         public IActionResult Edit(Product product)
         {
             if (ModelState.IsValid)
@@ -42,9 +44,11 @@ namespace PetStore.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         public ViewResult Create() => View("Edit", new Product());
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int productId)
         {
             Product deletedProduct = _repository.DeleteProduct(productId);

@@ -19,13 +19,19 @@
             АПТЕЧНЫЙ СКЛАД
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="col navbar-nav">
+            <div class="col navbar-nav">
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
                     <a class="nav-item nav-link @(ViewBag.Current == "Orders" ? "active" : "")" asp-action="List" asp-controller="Order">Заказы</a>
                     <a class="nav-item nav-link @(ViewBag.Current == "Products" ? "active" : "")" asp-action="Index" asp-controller="Admin">Товары</a>
-                </div>
-            }
+
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-item nav-link @(ViewBag.Current == "Roles" ? "active" : "")" asp-action="Index" asp-controller="Role">Роли</a>
+                    <a class="nav-item nav-link @(ViewBag.Current == "Users" ? "active" : "")" asp-action="UserList" asp-controller="Role">Пользователи</a>
+                }
+            </div>
             <div class="col">
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -38,6 +44,8 @@
                 else
                 {
                     <div class="nav-item d-flex flex-row-reverse">
+                        <a class="ml-2 btn btn-sm btn-outline-light navbar-btn"
+                           asp-action="Register" asp-controller="Account">Регистрация</a>
                         <a class="btn btn-sm btn-outline-light navbar-btn"
                            asp-action="Login" asp-controller="Account">Вход</a>
                     </div>

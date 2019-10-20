@@ -12,13 +12,13 @@ namespace PetStore.Models
 
         public static async Task EnsurePopulated(IApplicationBuilder app)
         {
-            UserManager<IdentityUser> userManager = app.ApplicationServices
-                .GetRequiredService<UserManager<IdentityUser>>();
+            UserManager<ApplicationUser> userManager = app.ApplicationServices
+                .GetRequiredService<UserManager<ApplicationUser>>();
 
-            IdentityUser user = await userManager.FindByIdAsync(adminUser);
+            ApplicationUser user = await userManager.FindByIdAsync(adminUser);
             if (user == null)
             {
-                user = new IdentityUser("Admin");
+                user = new ApplicationUser("Admin");
                 await userManager.CreateAsync(user, adminPassword);
             }
         }

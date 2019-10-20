@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetStore.Models
 {
-    public class FakeProductRepository : IProductRepository
+    public class FakeProductRepository /*: IProductRepository*/
     {
         public IQueryable<Product> Products => new List<Product> {
             new Product { Name = "Cage", Price = 200 },

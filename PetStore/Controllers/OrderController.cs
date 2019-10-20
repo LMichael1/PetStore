@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetStore.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PetStore.Controllers
 {
@@ -9,7 +10,7 @@ namespace PetStore.Controllers
         #region fields
 
         private IOrderRepository _repository;
-        private Cart _cart; 
+        private Cart _cart;
 
         #endregion
 
@@ -17,6 +18,24 @@ namespace PetStore.Controllers
         {
             _repository = repoService;
             _cart = cartService;
+        }
+
+        [Authorize]
+        public ViewResult List() =>
+            View(_repository.Orders.Where(o => !o.Shipped));
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult MarkShipped(int orderID)
+        {
+            Order order = _repository.Orders
+                .FirstOrDefault(o => o.OrderID == orderID);
+            if (order != null)
+            {
+                order.Shipped = true;
+                _repository.SaveOrder(order);
+            }
+            return RedirectToAction(nameof(List));
         }
 
         public ViewResult Checkout() => View(new Order());

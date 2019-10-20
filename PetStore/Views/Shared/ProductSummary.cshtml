@@ -5,7 +5,7 @@
         <h5 class="card-title">
             @Model.Name
             <span class="badge badge-pill badge-primary" style="float:right">
-                <small>@Model.Price.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</small>
+                <small>@Model.Price.ToString("c")</small>
             </span>
         </h5>
         <form id="@Model.ID" asp-action="AddToCart"
@@ -16,7 +16,7 @@
             <span class="card-text">@Model.Description</span>
             <button type="submit"
                     class="btn btn-outline-success btn-sm pull-right" style="float:right">
-                Add to cart
+                Добавить в корзину
             </button>
         </form>
     </div>

@@ -15,7 +15,12 @@ namespace PetStore.Controllers
             _repository = repo;
         }
 
-        public ViewResult Index() => View(_repository.Products);
+        public ViewResult Index()
+        {
+            ViewBag.Current = "Products";
+
+            return View(_repository.Products);
+        }
 
         public ViewResult Edit(int productId) =>
             View(_repository.Products

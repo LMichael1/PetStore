@@ -7,7 +7,6 @@ using PetStore.Models;
 
 namespace PetStore.Controllers
 {
-
     [Authorize]
     public class AccountController : Controller
     {

@@ -8,19 +8,43 @@
           asp-href-exclude="**/*-reboot*,**/*-grid*" />
     <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" asp-href-include="/css/StyleSheet.css" />
-    <title>Pet store</title>
+    <title>Аптечный склад</title>
 </head>
 <body>
-    <div class="navbar navbar-dark" role="navigation">
-        <a class="col navbar-brand" asp-action="List"
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand ml-3" asp-action="List"
            asp-controller="Product"
            asp-route-category="">
-            PET STORE
+            <img src="~/images/cropped-open-site-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            АПТЕЧНЫЙ СКЛАД
         </a>
-        <div class="col-4 text-right">
-            @await Component.InvokeAsync("CartSummary")
+        <div class="collapse navbar-collapse" id="navbarNav">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="col navbar-nav">
+                    <a class="nav-item nav-link @(ViewBag.Current == "Orders" ? "active" : "")" asp-action="List" asp-controller="Order">Заказы</a>
+                    <a class="nav-item nav-link @(ViewBag.Current == "Products" ? "active" : "")" asp-action="Index" asp-controller="Admin">Товары</a>
+                </div>
+            }
+            <div class="col">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="d-flex flex-row-reverse">
+                        <a class="ml-2 btn btn-sm btn-outline-light navbar-btn"
+                           asp-action="Logout" asp-controller="Account">Выход</a>
+                        @await Component.InvokeAsync("CartSummary")
+                    </div>
+                }
+                else
+                {
+                    <div class="nav-item d-flex flex-row-reverse">
+                        <a class="btn btn-sm btn-outline-light navbar-btn"
+                           asp-action="Login" asp-controller="Account">Вход</a>
+                    </div>
+                }
+            </div>
         </div>
-    </div>
+    </nav>
     <div class="row m-1 p-1">
         <div id="categories" class="col-3">
             @await Component.InvokeAsync("NavigationMenu")

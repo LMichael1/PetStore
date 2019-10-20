@@ -21,8 +21,12 @@ namespace PetStore.Controllers
         }
 
         [Authorize]
-        public ViewResult List() =>
-            View(_repository.Orders.Where(o => !o.Shipped));
+        public ViewResult List()
+        {
+            ViewBag.Current = "Orders";
+
+            return View(_repository.Orders.Where(o => !o.Shipped));
+        }
 
         [HttpPost]
         [Authorize]

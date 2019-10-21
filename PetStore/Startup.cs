@@ -10,6 +10,7 @@ using PetStore.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using PetStore.Models.MongoDb;
 
 namespace PetStore
 {
@@ -35,6 +36,7 @@ namespace PetStore
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IProductRepository, EFProductRepository>();
+            services.AddTransient<ImagesDbContext>();
             services.AddScoped(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();

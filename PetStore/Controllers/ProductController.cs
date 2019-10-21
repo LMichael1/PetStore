@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PetStore.Models;
+using PetStore.Models.MongoDb;
 using PetStore.Models.ViewModels;
 
 namespace PetStore.Controllers
@@ -12,15 +13,18 @@ namespace PetStore.Controllers
     {
         #region fields
 
+        private readonly ImagesDbContext _imagesDb;
+
         private IProductRepository _repository;
 
         public int PageSize = 4; 
 
         #endregion
 
-        public ProductController(IProductRepository repository)
+        public ProductController(IProductRepository repository, ImagesDbContext context)
         {
             _repository = repository;
+            _imagesDb = context;
         }
 
         public ViewResult List(string category, int productPage = 1)
@@ -42,5 +46,15 @@ namespace PetStore.Controllers
                 },
                 CurrentCategory = category
             });
+
+        public async Task<ActionResult> GetImage(string id)
+        {
+            var image = await _imagesDb.GetImage(id);
+            if (image == null)
+            {
+                return NotFound();
+            }
+            return File(image, "image/png");
+        }
     }
 }

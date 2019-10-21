@@ -24,14 +24,14 @@
                     <td class="text-right">@item.Price.ToString("c")</td>
                     <td style="width:15%" class="text-center">
                         <form asp-action="Delete" method="post">
-                            <a asp-action="Edit" class="btn btn-sm btn-warning"
+                            <a asp-action="Edit" class="btn btn-sm btn-warning rounded-pill"
                                asp-route-productId="@item.ID">
                                 Редактировать
                             </a>
                             @if (User.IsInRole("Admin"))
                             {
                                 <input type="hidden" name="ProductID" value="@item.ID" />
-                                <button type="submit" class="btn btn-danger btn-sm">
+                                <button type="submit" class="btn btn-danger btn-sm rounded-pill">
                                     Удалить
                                 </button>
                             }

@@ -12,7 +12,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand ml-3" asp-action="List"
+        <a class="navbar-brand ml-3 mb-0 h1" asp-action="List"
            asp-controller="Product"
            asp-route-category="">
             <img src="~/images/cropped-open-site-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -32,11 +32,21 @@
                     <a class="nav-item nav-link @(ViewBag.Current == "Users" ? "active" : "")" asp-action="UserList" asp-controller="Role">Пользователи</a>
                 }
             </div>
-            <div class="col">
+            <div class="p-1 bg-light rounded rounded-pill shadow-sm">
+                <form class="form-inline">
+                    <div class="input-group">
+                        <input class="form-control form-control border-0 bg-light rounded rounded-pill" type="search" placeholder="Поиск" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-link text-primary" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col col-md-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="d-flex flex-row-reverse">
-                        <a class="ml-2 btn btn-sm btn-outline-light navbar-btn"
+                        <a class="ml-2 btn rounded-pill btn-outline-light navbar-btn"
                            asp-action="Logout" asp-controller="Account">Выход</a>
                         @await Component.InvokeAsync("CartSummary")
                     </div>
@@ -44,7 +54,7 @@
                 else
                 {
                     <div class="nav-item d-flex flex-row-reverse">
-                        <a class="ml-2 btn btn-sm btn-outline-light navbar-btn"
+                        <a class="ml-2 btn rounded-pill btn-outline-light navbar-btn"
                            asp-action="Register" asp-controller="Account">Регистрация</a>
                         <a class="btn btn-sm btn-outline-light navbar-btn"
                            asp-action="Login" asp-controller="Account">Вход</a>

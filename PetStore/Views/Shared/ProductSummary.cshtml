@@ -1,23 +1,37 @@
 ﻿@model Product
 
 <div class="card mt-2">
-    <div class="card-body">
-        <h5 class="card-title">
-            @Model.Name
-            <span class="badge badge-pill badge-primary" style="float:right">
-                <small>@Model.Price.ToString("c")</small>
-            </span>
-        </h5>
-        <form id="@Model.ID" asp-action="AddToCart"
-              asp-controller="Cart" method="post">
-            <input type="hidden" asp-for="ID" name="productId" />
-            <input type="hidden" name="returnUrl"
-                   value="@ViewContext.HttpContext.Request.PathAndQuery()" />
-            <span class="card-text">@Model.Description</span>
-            <button type="submit"
-                    class="btn btn-outline-success btn-sm pull-right" style="float:right">
-                Добавить в корзину
-            </button>
-        </form>
+    <div class="row no-gutters">
+        <div class="col-md-2">
+            @if (Model.ImageId != String.Empty)
+            {
+                <img src="@Url.Action("GetImage", new { id=@Model.ImageId })" class="card-img" alt="Товар" />
+            }
+            else
+            {
+                <img src="~/images/pills.png" class="card-img" alt="Товар" />
+            }
+        </div>
+        <div class="col-md">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @Model.Name
+                    <span class="badge badge-pill badge-primary" style="float:right">
+                        <small>@Model.Price.ToString("c")</small>
+                    </span>
+                </h5>
+                <form id="@Model.ID" asp-action="AddToCart"
+                      asp-controller="Cart" method="post">
+                    <input type="hidden" asp-for="ID" name="productId" />
+                    <input type="hidden" name="returnUrl"
+                           value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                    <span class="card-text">@Model.Description</span>
+                    <button type="submit"
+                            class="btn rounded-pill btn-outline-success btn-sm pull-right" style="float:right">
+                        Добавить в корзину
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

@@ -5,39 +5,56 @@
 }
 
 <div class="container-fluid w-50">
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <div class="card mt-2">
             <div class="card-body">
-                <h5 class="card-title">
+                <h3 class="card-title">
                     Товар
-                </h5>
+                </h3>
                 <input type="hidden" asp-for="ID" />
+                <input type="hidden" asp-for="ImageId" />
+                @if (Model.ImageId != String.Empty)
+                {
+                    <img src="@Url.Action("GetImage", new { id=@Model.ImageId })" class="rounded" height="200" alt="Товар" />
+                }
                 <div class="form-group">
-                    <label asp-for="Name"></label>
+                    <h5 class="card-title">
+                        <label asp-for="Name">Название</label>
+                    </h5>
                     <div><span asp-validation-for="Name" class="text-danger"></span></div>
                     <input asp-for="Name" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Description"></label>
+                    <h5 class="card-title"><label asp-for="Description">Описание</label></h5>
                     <div><span asp-validation-for="Description" class="text-danger"></span></div>
                     <textarea asp-for="Description" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Category"></label>
+                    <h5 class="card-title">
+                        <label asp-for="Category">Категория</label>
+                    </h5>
                     <div><span asp-validation-for="Category" class="text-danger"></span></div>
                     <input asp-for="Category" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price"></label>
+                    <h5 class="card-title">
+                        <label asp-for="Price">Цена</label>
+                    </h5>
                     <div><span asp-validation-for="Price" class="text-danger"></span></div>
                     <input asp-for="Price" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <h5 class="card-title">
+                        <label asp-for="Image" class="control-label">Загрузить изображение</label>
+                    </h5>
+                    <input asp-for="Image" type="file" name="Image" class="form-control" />
                 </div>
             </div>
         </div>
         <br />
         <div class="text-center">
-            <button class="btn btn-success btn-transparent" type="submit">Сохранить</button>
-            <a asp-action="Index" asp-controller="" class="btn btn-secondary btn-transparent">Отмена</a>
+            <button class="btn btn-success btn-transparent rounded-pill" type="submit">Сохранить</button>
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary btn-transparent rounded-pill">Отмена</a>
         </div>
         <br />
     </form>

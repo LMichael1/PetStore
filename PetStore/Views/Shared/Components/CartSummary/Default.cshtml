@@ -9,7 +9,7 @@
             @Model.ComputeTotalValue().ToString("c")
         </small>
     }
-    <a class="btn btn-sm btn-outline-light navbar-btn"
+    <a class="btn rounded-pill btn-outline-light navbar-btn"
        asp-controller="Cart" asp-action="Index"
        asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
         <i class="fa fa-shopping-cart"></i>

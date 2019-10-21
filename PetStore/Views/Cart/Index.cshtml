@@ -28,7 +28,7 @@
                                        value="@line.Product.ID" />
                                 <input type="hidden" name="returnUrl"
                                        value="@Model.ReturnUrl" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                     Удалить
                                 </button>
                             </form>
@@ -49,8 +49,8 @@
 </div>
 <br />
 <div class="text-center">
-    <a class="btn btn-primary btn-transparent" href="@Model.ReturnUrl">Продолжить покупки</a>
-    <a class="btn btn-success btn-transparent" asp-action="Checkout"
+    <a class="btn btn-primary btn-transparent rounded-pill" href="@Model.ReturnUrl">Продолжить покупки</a>
+    <a class="btn btn-success btn-transparent rounded-pill" asp-action="Checkout"
        asp-controller="Order">
         Оформить заказ
     </a>

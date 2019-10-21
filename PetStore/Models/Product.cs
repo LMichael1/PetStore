@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PetStore.Models
@@ -15,6 +17,9 @@ namespace PetStore.Models
             ErrorMessage = "Введите положительную цену")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "Укажите категорию")]
-        public string Category { get; set; } 
+        public string Category { get; set; }
+        public string ImageId { get; set; }
+        [NotMapped]
+        public IFormFile Image { get; set; }
     }
 }

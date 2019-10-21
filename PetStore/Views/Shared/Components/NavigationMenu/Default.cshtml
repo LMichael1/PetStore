@@ -3,7 +3,7 @@
 <div class="card text-center mt-2">
     <div class="card-body">
         <h5 class="card-title">Категории</h5>
-        <a class="btn btn-block btn-light"
+        <a class="btn btn-block btn-light rounded-pill"
            asp-action="List"
            asp-controller="Product"
            asp-route-category="">
@@ -12,7 +12,7 @@
 
         @foreach (string category in Model)
         {
-            <a class="btn btn-block
+            <a class="btn btn-block rounded-pill
                 @(category == ViewBag.SelectedCategory ? "btn-primary": "btn-light")"
                asp-action="List"
                asp-controller="Product"

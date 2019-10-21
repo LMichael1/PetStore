@@ -25,12 +25,15 @@
                     <input type="hidden" asp-for="ID" name="productId" />
                     <input type="hidden" name="returnUrl"
                            value="@ViewContext.HttpContext.Request.PathAndQuery()" />
-                    <span class="card-text">@Model.Description</span>
-                    <button type="submit"
-                            class="btn rounded-pill btn-outline-success btn-sm pull-right" style="float:right">
-                        Добавить в корзину
-                    </button>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button type="submit"
+                                class="btn rounded-pill btn-outline-success btn-sm pull-right" style="float:right">
+                            Добавить в корзину
+                        </button>
+                    }
                 </form>
+                <span class="card-text">@Model.Description</span>
             </div>
         </div>
     </div>

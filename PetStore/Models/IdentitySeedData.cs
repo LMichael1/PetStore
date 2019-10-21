@@ -15,11 +15,17 @@ namespace PetStore.Models
             UserManager<ApplicationUser> userManager = app.ApplicationServices
                 .GetRequiredService<UserManager<ApplicationUser>>();
 
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices
+                .GetRequiredService<RoleManager<IdentityRole>>();
+
             ApplicationUser user = await userManager.FindByIdAsync(adminUser);
             if (user == null)
             {
                 user = new ApplicationUser("Admin");
                 await userManager.CreateAsync(user, adminPassword);
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await roleManager.CreateAsync(new IdentityRole("Manager"));
+                await userManager.AddToRoleAsync(user, "Admin");
             }
         }
     }

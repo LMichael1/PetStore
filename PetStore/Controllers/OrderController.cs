@@ -11,13 +11,15 @@ namespace PetStore.Controllers
         #region fields
 
         private IOrderRepository _repository;
+        private IStockRepository _stockRepository;
         private Cart _cart;
 
         #endregion
 
-        public OrderController(IOrderRepository repoService, Cart cartService)
+        public OrderController(IOrderRepository repoService, IStockRepository stockRepository, Cart cartService)
         {
             _repository = repoService;
+            _stockRepository = stockRepository;
             _cart = cartService;
         }
 
@@ -29,17 +31,27 @@ namespace PetStore.Controllers
             return View(_repository.Orders.Where(o => !o.Shipped));
         }
 
+        [Authorize(Roles = "Admin, Manager")]
+        public ViewResult ListShipped()
+        {
+            ViewBag.Current = "OrdersShipped";
+
+            return View(_repository.Orders.Where(o => o.Shipped));
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
         public IActionResult MarkShipped(int orderID)
         {
             Order order = _repository.Orders
                 .FirstOrDefault(o => o.OrderID == orderID);
+
             if (order != null)
             {
                 order.Shipped = true;
                 _repository.SaveOrder(order);
             }
+
             return RedirectToAction(nameof(List));
         }
 
@@ -56,6 +68,7 @@ namespace PetStore.Controllers
             if (ModelState.IsValid)
             {
                 order.Lines = _cart.Lines.ToArray();
+
                 _repository.SaveOrder(order);
 
                 return RedirectToAction(nameof(Completed));

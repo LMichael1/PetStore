@@ -9,7 +9,8 @@ namespace PetStore.Models
         #region properties
 
         public DbSet<Product> Products { get; set; }
-        public DbSet<Order> Orders { get; set; } 
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Stock> StockItems { get; set; }
 
         #endregion
 

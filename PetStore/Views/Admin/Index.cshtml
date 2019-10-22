@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model IEnumerable<Stock>
 @{
     ViewBag.Title = "Все товары";
     Layout = "_AdminLayout";
@@ -13,31 +13,47 @@
                     <th class="text-right">ID</th>
                     <th>Название</th>
                     <th class="text-right">Цена</th>
+                    <th class="text-right">Количество на складе</th>
                     <th class="text-center">Действия</th>
                 </tr>
             </thead>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td class="text-right">@item.ID</td>
-                    <td>@item.Name</td>
-                    <td class="text-right">@item.Price.ToString("c")</td>
-                    <td style="width:15%" class="text-center">
-                        <form asp-action="Delete" method="post">
-                            <a asp-action="Edit" class="btn btn-sm btn-warning rounded-pill"
-                               asp-route-productId="@item.ID">
-                                Редактировать
-                            </a>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <input type="hidden" name="ProductID" value="@item.ID" />
-                                <button type="submit" class="btn btn-danger btn-sm rounded-pill">
-                                    Удалить
-                                </button>
-                            }
-                        </form>
-                    </td>
-                </tr>
+                if (item.Product != null)
+                {
+                    <tr>
+                        <td class="text-right">@item.Product.ID</td>
+                        <td>@item.Product.Name</td>
+                        <td class="text-right">@item.Product.Price.ToString("c")</td>
+                        <td class="text-right">@item.Quantity</td>
+                        <td style="width:15%" class="text-center">
+                            <form asp-action="Delete" method="post">
+                                <a asp-action="Edit" class="btn btn-sm btn-warning rounded-pill"
+                                   asp-route-productId="@item.Product.ID">
+                                    Редактировать
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <input type="hidden" name="ProductID" value="@item.Product.ID" />
+                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill">
+                                        Удалить
+                                    </button>
+                                }
+                            </form>
+                            <form class="form-inline mt-2" asp-action="AddToStock" method="post">
+                                <input type="hidden" name="stockId" value="@item.ID" />
+                                <div class="input-group">
+                                    <input type="number" name="Quantity" value="0" min="0" class="form-control form-control-sm rounded-pill" />
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill ml-1">
+                                            Заказать
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
             }
         </table>
     </div>

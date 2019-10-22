@@ -17,47 +17,60 @@ namespace PetStore.Controllers
 
         private IProductRepository _repository;
 
-        public int PageSize = 4; 
+        private IStockRepository _stockRepository;
+
+        public int PageSize = 4;
 
         #endregion
 
-        public ProductController(IProductRepository repository)//, ImagesDbContext context)
+        public ProductController(IProductRepository repository, IStockRepository stockRepository, ImagesDbContext context)
         {
             _repository = repository;
-           // _imagesDb = context;
+            _stockRepository = stockRepository;
+            _imagesDb = context;
         }
 
         public ViewResult List(string category, int productPage = 1)
-            => View(new ProductsListViewModel
-            {
-                Products = _repository.Products
+        {
+            var products = _stockRepository.StockItems
+                    .Where(p => p.Quantity > 0)
+                    .Select(p => p.Product)
                     .Where(p => category == null || p.Category == category)
-                    .OrderBy(p => p.ID)
+                    .OrderBy(p => p.ID);
+
+            var paging = new PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = PageSize,
+                TotalItems = category == null ?
+                        products.Count() :
+                        products.Where(e =>
+                            e.Category == category).Count()
+            };
+
+            return View(new ProductsListViewModel
+            {
+                Products = products
                     .Skip((productPage - 1) * PageSize)
                     .Take(PageSize),
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = productPage,
-                    ItemsPerPage = PageSize,
-                    TotalItems = category == null ?
-                        _repository.Products.Count() :
-                        _repository.Products.Where(e =>
-                            e.Category == category).Count()
-                },
+                PagingInfo = paging,
                 CurrentCategory = category
             });
+        }
 
         public async Task<ActionResult> GetImage(string id)
         {
-            if (true)
-            {
-                return NotFound();
-            }
+            //if (true)
+            //{
+            //    return NotFound();
+            //}
             var image = await _imagesDb.GetImage(id);
+
             if (image == null)
             {
                 return NotFound();
             }
+
             return File(image, "image/png");
         }
     }

@@ -13,7 +13,7 @@
                 </h3>
                 <input type="hidden" asp-for="ID" />
                 <input type="hidden" asp-for="ImageId" />
-                @if (Model.ImageId != String.Empty)
+                @if (!String.IsNullOrWhiteSpace(Model.ImageId))
                 {
                     <img src="@Url.Action("GetImage", new { id=@Model.ImageId })" class="rounded" height="200" alt="Товар" />
                 }

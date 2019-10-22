@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetStore.Models;
 
 namespace PetStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191022090216_stocks")]
+    partial class stocks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,17 +54,16 @@ namespace PetStore.Migrations
                     b.Property<string>("Country")
                         .IsRequired();
 
-                    b.Property<DateTime>("Date");
-
                     b.Property<bool>("GiftWrap");
 
-                    b.Property<string>("House")
+                    b.Property<string>("Line1")
                         .IsRequired();
+
+                    b.Property<string>("Line2");
+
+                    b.Property<string>("Line3");
 
                     b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("Room")
                         .IsRequired();
 
                     b.Property<bool>("Shipped");
@@ -70,10 +71,7 @@ namespace PetStore.Migrations
                     b.Property<string>("State")
                         .IsRequired();
 
-                    b.Property<string>("Street")
-                        .IsRequired();
-
-                    b.Property<int>("Zip");
+                    b.Property<string>("Zip");
 
                     b.HasKey("OrderID");
 

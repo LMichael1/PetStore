@@ -14,13 +14,15 @@ namespace PetStore.Controllers
         #region fields
 
         private IProductRepository _repository;
-        private Cart _cart; 
+        private IStockRepository _stockRepository;
+        private Cart _cart;
 
         #endregion
 
-        public CartController(IProductRepository repo, Cart cartService)
+        public CartController(IProductRepository repo, IStockRepository stockRepository, Cart cartService)
         {
             _repository = repo;
+            _stockRepository = stockRepository;
             _cart = cartService;
         }
 
@@ -52,10 +54,11 @@ namespace PetStore.Controllers
             Product product = _repository.Products
                 .FirstOrDefault(p => p.ID == line.Product.ID);
 
-            if (product != null)
-            {
-                _cart.AddItem(product, 1);
-            }
+                if (product != null && _stockRepository.StockItems
+                            .FirstOrDefault(s => s.Product.ID == product.ID).Quantity >= 1)
+                {
+                    _cart.AddItem(product, 1);
+                }
 
             return RedirectToAction("Index", new { model.ReturnUrl });
         }

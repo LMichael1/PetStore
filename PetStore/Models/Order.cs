@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -15,23 +16,29 @@ namespace PetStore.Models
         [BindNever]
         public bool Shipped { get; set; }
 
-        [Required(ErrorMessage = "Please enter a name")]
+        public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Пожалуйста, введите ФИО")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Please enter the first address line")]
-        public string Line1 { get; set; }
-        public string Line2 { get; set; }
-        public string Line3 { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите улицу")]
+        public string Street { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите номер дома")]
+        public string House { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите номер квартиры")]
+        public string Room { get; set; }
 
-        [Required(ErrorMessage = "Please enter a city name")]
+        [Required(ErrorMessage = "Пожалуйста, введите город")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "Please enter a state name")]
+        [Required(ErrorMessage = "Пожалуйста, введите область")]
         public string State { get; set; }
 
-        public string Zip { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите почтовый индекс")]
+        [Range(0, 99999, ErrorMessage = "Недопустимый индекс")]
+        public int Zip { get; set; }
 
-        [Required(ErrorMessage = "Please enter a country name")]
+        [Required(ErrorMessage = "Пожалуйста, введите страну")]
         public string Country { get; set; }
 
         public bool GiftWrap { get; set; } 

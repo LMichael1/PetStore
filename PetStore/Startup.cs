@@ -36,10 +36,11 @@ namespace PetStore
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IProductRepository, EFProductRepository>();
-          //  services.AddTransient<ImagesDbContext>();
+            services.AddTransient<IStockRepository, EFStockRepository>();
+            services.AddTransient<IOrderRepository, EFOrderRepository>();
+            services.AddTransient<ImagesDbContext>();
             services.AddScoped(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IOrderRepository, EFOrderRepository>();
             services.AddMvc();
             services.AddMemoryCache();
             services.AddSession();

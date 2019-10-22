@@ -12,11 +12,13 @@ namespace PetStore.Controllers
     public class AdminController : Controller
     {
         private readonly ImagesDbContext _imagesDb;
+        private IStockRepository _stockRepository;
         private IProductRepository _repository;
 
-        public AdminController(IProductRepository repo, ImagesDbContext context)
+        public AdminController(IProductRepository repo, IStockRepository stockRepo, ImagesDbContext context)
         {
             _repository = repo;
+            _stockRepository = stockRepo;
             _imagesDb = context;
         }
 
@@ -25,7 +27,7 @@ namespace PetStore.Controllers
         {
             ViewBag.Current = "Products";
 
-            return View(_repository.Products);
+            return View(_stockRepository.StockItems);
         }
 
         [Authorize(Roles = "Admin, Manager")]
@@ -39,10 +41,10 @@ namespace PetStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (product.Image!=null)
+                if (product.Image != null)
                 {
                     var imageName = DateTime.Now.ToString() + product.Name;
-                    var image = await _imagesDb.StoreImage(product.Image.OpenReadStream(), 
+                    var image = await _imagesDb.StoreImage(product.Image.OpenReadStream(),
                                                             imageName);
 
                     product.ImageId = image;
@@ -50,6 +52,12 @@ namespace PetStore.Controllers
 
                 _repository.SaveProduct(product);
                 TempData["message"] = $"{product.Name} был сохранен";
+
+                if (_stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == product.ID) == null)
+                {
+                    _stockRepository.SaveStockItem(new Stock { Product = product, Quantity = 0 });
+                }
+
                 return RedirectToAction("Index");
             }
             else
@@ -66,11 +74,26 @@ namespace PetStore.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int productId)
         {
+            Stock deletedStock = _stockRepository.DeleteStockItem(productId);
             Product deletedProduct = _repository.DeleteProduct(productId);
-            if (deletedProduct != null)
+
+            if (deletedProduct != null && deletedStock != null)
             {
                 TempData["message"] = $"{deletedProduct.Name} was deleted";
             }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
+        public IActionResult AddToStock(int stockId, int quantity)
+        {
+            var stock = _stockRepository.StockItems.FirstOrDefault(s => s.ID == stockId);
+
+            stock.Quantity += quantity;
+            _stockRepository.SaveStockItem(stock);
+
             return RedirectToAction("Index");
         }
 

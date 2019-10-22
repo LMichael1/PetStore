@@ -18,3 +18,7 @@
 .card-header, .card-footer {
     opacity: 1
 }
+
+tbody.collapse.in {
+    display: table-row-group;
+}

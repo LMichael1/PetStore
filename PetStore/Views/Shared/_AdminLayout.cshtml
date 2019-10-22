@@ -31,6 +31,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                 {
                     <a class="nav-item nav-link @(ViewBag.Current == "Orders" ? "active" : "")" asp-action="List" asp-controller="Order">Заказы</a>
+                    <a class="nav-item nav-link @(ViewBag.Current == "OrdersShipped" ? "active" : "")" asp-action="ListShipped" asp-controller="Order">Обработанные заказы</a>
                     <a class="nav-item nav-link @(ViewBag.Current == "Products" ? "active" : "")" asp-action="Index" asp-controller="Admin">Товары</a>
 
                 }

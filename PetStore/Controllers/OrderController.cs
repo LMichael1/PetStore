@@ -48,8 +48,26 @@ namespace PetStore.Controllers
 
             if (order != null)
             {
-                order.Shipped = true;
-                _repository.SaveOrder(order);
+                bool flag = true;
+
+                foreach (var l in order.Lines)
+                {
+                    if (l.Quantity > _stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == l.Product.ID).Quantity)
+                    {
+                        TempData["message"] = $"{l.Product.Name} недостаточно на складе";
+                        flag = false;
+                    }
+                }
+                if (flag)
+                {
+                    order.Shipped = true;
+                    _repository.SaveOrder(order);
+
+                    foreach (var l in order.Lines)
+                    {
+                        _stockRepository.ReduceQuantity(l.Product.ID);
+                    }
+                }
             }
 
             return RedirectToAction(nameof(List));

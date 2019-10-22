@@ -50,5 +50,21 @@ namespace PetStore.Models
 
             return dbEntry;
         }
+
+        public void ReduceQuantity(int productID)
+        {
+            Stock dbEntry = _context.StockItems
+                .FirstOrDefault(s => s.Product.ID == productID);
+
+            if (dbEntry != null)
+            {
+                if (dbEntry.Quantity > 0)
+                {
+                    dbEntry.Quantity--;
+                }
+
+                _context.SaveChanges();
+            }
+        }
     }
 }

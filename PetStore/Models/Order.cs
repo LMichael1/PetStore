@@ -25,7 +25,7 @@ namespace PetStore.Models
         public string Street { get; set; }
         [Required(ErrorMessage = "Пожалуйста, введите номер дома")]
         public string House { get; set; }
-        [Required(ErrorMessage = "Пожалуйста, введите номер квартиры")]
+
         public string Room { get; set; }
 
         [Required(ErrorMessage = "Пожалуйста, введите город")]

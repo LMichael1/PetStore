@@ -10,5 +10,6 @@ namespace PetStore.Models
         IQueryable<Stock> StockItems { get; }
         void SaveStockItem(Stock stock);
         Stock DeleteStockItem(int productID);
+        void ReduceQuantity(int productID);
     }
 }

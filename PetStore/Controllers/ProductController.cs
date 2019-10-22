@@ -21,10 +21,10 @@ namespace PetStore.Controllers
 
         #endregion
 
-        public ProductController(IProductRepository repository, ImagesDbContext context)
+        public ProductController(IProductRepository repository)//, ImagesDbContext context)
         {
             _repository = repository;
-            _imagesDb = context;
+           // _imagesDb = context;
         }
 
         public ViewResult List(string category, int productPage = 1)
@@ -49,6 +49,10 @@ namespace PetStore.Controllers
 
         public async Task<ActionResult> GetImage(string id)
         {
+            if (true)
+            {
+                return NotFound();
+            }
             var image = await _imagesDb.GetImage(id);
             if (image == null)
             {

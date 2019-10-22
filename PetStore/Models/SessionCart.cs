@@ -31,6 +31,12 @@ namespace PetStore.Models
             Session.SetJson("Cart", this);
         }
 
+        public override void ReduceQuantity(Product product)
+        {
+            base.ReduceQuantity(product);
+            Session.SetJson("Cart", this);
+        }
+
         public override void RemoveLine(Product product)
         {
             base.RemoveLine(product);

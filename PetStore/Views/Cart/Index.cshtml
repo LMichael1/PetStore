@@ -16,11 +16,41 @@
                 @foreach (var line in Model.Cart.Lines)
                 {
                     <tr>
-                        <td class="text-center">@line.Quantity</td>
+                        <td>
+                            <div class="row justify-content-center">
+                                <div class="col col-md-auto">
+                                    <form id="@line.ID" asp-action="ReduceQuantity"
+                                          asp-controller="Cart" method="post">
+                                        <input type="hidden" asp-for="EditedLineId" value="@line.ID" />
+                                        <input type="hidden" name="returnUrl"
+                                               value="@Model.ReturnUrl" />
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger rounded-pill">
+                                            -
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col col-md-auto">
+                                    @line.Quantity
+                                </div>
+                                <div class="col col-md-auto">
+                                    <form id="@line.ID" asp-action="IncreaseQuantity"
+                                          asp-controller="Cart" method="post">
+                                        <input type="hidden" asp-for="EditedLineId" value="@line.ID" />
+                                        <input type="hidden" name="returnUrl"
+                                               value="@Model.ReturnUrl" />
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-success rounded-pill">
+                                            +
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-left">@line.Product.Name</td>
-                        <td class="text-right">@line.Product.Price.ToString("c")</td>
+                        <td class="text-right">@line.Product.Price.ToString("c", CultureInfo.GetCultureInfo("uk-UA"))</td>
                         <td class="text-right">
-                            @((line.Quantity * line.Product.Price).ToString("c"))
+                            @((line.Quantity * line.Product.Price).ToString("c", CultureInfo.GetCultureInfo("uk-UA")))
                         </td>
                         <td style="width:5%">
                             <form asp-action="RemoveFromCart" method="post">
@@ -40,7 +70,7 @@
                 <tr>
                     <td colspan="3" class="text-right">Итого:</td>
                     <td class="text-right">
-                        @Model.Cart.ComputeTotalValue().ToString("c")
+                        @Model.Cart.ComputeTotalValue().ToString("c", CultureInfo.GetCultureInfo("uk-UA"))
                     </td>
                 </tr>
             </tfoot>

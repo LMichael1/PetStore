@@ -17,6 +17,10 @@
                 {
                     <img src="@Url.Action("GetImage", new { id=@Model.ImageId })" class="rounded" height="200" alt="Товар" />
                 }
+                else
+                {
+                    <img src="~/images/pills.png" class="rounded" height="200" alt="Товар" />
+                }
                 <div class="form-group">
                     <h5 class="card-title">
                         <label asp-for="Name">Название</label>

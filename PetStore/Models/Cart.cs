@@ -33,6 +33,18 @@ namespace PetStore.Models
             }
         }
 
+        public virtual void ReduceQuantity(Product product)
+        {
+            foreach (var l in _lineCollection)
+            {
+                if (l.Product.ID == product.ID)
+                {
+                    l.Quantity--;
+                    break;
+                }
+            }
+        }
+
         public virtual void RemoveLine(Product product) =>
             _lineCollection.RemoveAll(l => l.Product.ID == product.ID);
 

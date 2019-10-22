@@ -45,6 +45,43 @@ namespace PetStore.Controllers
             return RedirectToAction("Index", new { returnUrl });
         }
 
+        public RedirectToActionResult IncreaseQuantity(CartIndexViewModel model)
+        {
+            var line = _cart.Lines.FirstOrDefault(l => l.ID == model.EditedLineId);
+
+            Product product = _repository.Products
+                .FirstOrDefault(p => p.ID == line.Product.ID);
+
+            if (product != null)
+            {
+                _cart.AddItem(product, 1);
+            }
+
+            return RedirectToAction("Index", new { model.ReturnUrl });
+        }
+
+        public RedirectToActionResult ReduceQuantity(CartIndexViewModel model)
+        {
+            var line = _cart.Lines.FirstOrDefault(l => l.ID == model.EditedLineId);
+
+            Product product = _repository.Products
+                .FirstOrDefault(p => p.ID == line.Product.ID);
+
+            if (product != null)
+            {
+                if (line.Quantity == 1)
+                {
+                    _cart.RemoveLine(product);
+                }
+                else
+                {
+                    _cart.ReduceQuantity(product);
+                }
+            }
+
+            return RedirectToAction("Index", new { model.ReturnUrl });
+        }
+
         public RedirectToActionResult RemoveFromCart(int productId,
                 string returnUrl)
         {

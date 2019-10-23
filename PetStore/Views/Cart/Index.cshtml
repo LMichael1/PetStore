@@ -19,9 +19,9 @@
                         <td>
                             <div class="row justify-content-center">
                                 <div class="col col-md-auto">
-                                    <form id="@line.ID" asp-action="ReduceQuantity"
+                                    <form asp-action="ReduceQuantity"
                                           asp-controller="Cart" method="post">
-                                        <input type="hidden" asp-for="EditedLineId" value="@line.ID" />
+                                        <input type="hidden" name="EditedLineProductId" value="@line.Product.ID" />
                                         <input type="hidden" name="returnUrl"
                                                value="@Model.ReturnUrl" />
                                         <button type="submit"
@@ -34,9 +34,9 @@
                                     @line.Quantity
                                 </div>
                                 <div class="col col-md-auto">
-                                    <form id="@line.ID" asp-action="IncreaseQuantity"
+                                    <form asp-action="IncreaseQuantity"
                                           asp-controller="Cart" method="post">
-                                        <input type="hidden" asp-for="EditedLineId" value="@line.ID" />
+                                        <input type="hidden" name="EditedLineProductId" value="@line.Product.ID" />
                                         <input type="hidden" name="returnUrl"
                                                value="@Model.ReturnUrl" />
                                         <button type="submit"

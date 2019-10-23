@@ -47,9 +47,9 @@ namespace PetStore.Controllers
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToActionResult IncreaseQuantity(CartIndexViewModel model)
+        public RedirectToActionResult IncreaseQuantity(int editedLineProductId, string returnUrl)
         {
-            var line = _cart.Lines.FirstOrDefault(l => l.ID == model.EditedLineId);
+            var line = _cart.Lines.FirstOrDefault(l => l.Product.ID == editedLineProductId);
 
             Product product = _repository.Products
                 .FirstOrDefault(p => p.ID == line.Product.ID);
@@ -60,12 +60,12 @@ namespace PetStore.Controllers
                     _cart.AddItem(product, 1);
                 }
 
-            return RedirectToAction("Index", new { model.ReturnUrl });
+            return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToActionResult ReduceQuantity(CartIndexViewModel model)
+        public RedirectToActionResult ReduceQuantity(int editedLineProductId, string returnUrl)
         {
-            var line = _cart.Lines.FirstOrDefault(l => l.ID == model.EditedLineId);
+            var line = _cart.Lines.FirstOrDefault(l => l.Product.ID == editedLineProductId);
 
             Product product = _repository.Products
                 .FirstOrDefault(p => p.ID == line.Product.ID);
@@ -82,7 +82,7 @@ namespace PetStore.Controllers
                 }
             }
 
-            return RedirectToAction("Index", new { model.ReturnUrl });
+            return RedirectToAction("Index", new { returnUrl });
         }
 
         public RedirectToActionResult RemoveFromCart(int productId,

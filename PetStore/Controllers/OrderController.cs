@@ -65,7 +65,7 @@ namespace PetStore.Controllers
 
                     foreach (var l in order.Lines)
                     {
-                        _stockRepository.ReduceQuantity(l.Product.ID);
+                        _stockRepository.ReduceQuantity(l.Product.ID, l.Quantity);
                     }
                 }
             }
@@ -80,7 +80,7 @@ namespace PetStore.Controllers
         {
             if (_cart.Lines.Count() == 0)
             {
-                ModelState.AddModelError("", "Sorry, your cart is empty!");
+                ModelState.AddModelError("", "Ваша корзина пуста!");
             }
 
             if (ModelState.IsValid)

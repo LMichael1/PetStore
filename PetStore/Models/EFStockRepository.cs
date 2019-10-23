@@ -51,7 +51,7 @@ namespace PetStore.Models
             return dbEntry;
         }
 
-        public void ReduceQuantity(int productID)
+        public void ReduceQuantity(int productID, int quantity = 1)
         {
             Stock dbEntry = _context.StockItems
                 .FirstOrDefault(s => s.Product.ID == productID);
@@ -60,7 +60,7 @@ namespace PetStore.Models
             {
                 if (dbEntry.Quantity > 0)
                 {
-                    dbEntry.Quantity--;
+                    dbEntry.Quantity -= quantity;
                 }
 
                 _context.SaveChanges();

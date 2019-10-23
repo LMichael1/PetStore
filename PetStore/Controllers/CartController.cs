@@ -54,11 +54,15 @@ namespace PetStore.Controllers
             Product product = _repository.Products
                 .FirstOrDefault(p => p.ID == line.Product.ID);
 
-                if (product != null && _stockRepository.StockItems
-                            .FirstOrDefault(s => s.Product.ID == product.ID).Quantity >= 1)
-                {
-                    _cart.AddItem(product, 1);
-                }
+            if (product != null && _stockRepository.StockItems
+                        .FirstOrDefault(s => s.Product.ID == product.ID).Quantity > line.Quantity)
+            {
+                _cart.AddItem(product, 1);
+            }
+            else
+            {
+                TempData["message"] = $"Недостаточное количество единиц на складе";
+            }
 
             return RedirectToAction("Index", new { returnUrl });
         }

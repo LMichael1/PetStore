@@ -3,7 +3,7 @@
 <div class="card mt-2">
     <div class="row no-gutters">
         <div class="col-md-2">
-            @if (Model.ImageId != String.Empty)
+            @if (!String.IsNullOrWhiteSpace(Model.ImageId))
             {
                 <img src="@Url.Action("GetImage", new { id=@Model.ImageId })" class="card-img" alt="Товар" />
             }
@@ -27,10 +27,17 @@
                            value="@ViewContext.HttpContext.Request.PathAndQuery()" />
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <button type="submit"
-                                class="btn rounded-pill btn-outline-success btn-sm pull-right" style="float:right">
-                            Добавить в корзину
-                        </button>
+                        if (Model.IsInStock)
+                        {
+                            <button type="submit"
+                                    class="btn rounded-pill btn-outline-success btn-sm pull-right" style="float:right">
+                                Добавить в корзину
+                            </button>
+                        }
+                        else
+                        {
+                            <h6 class="pull-right" style="float:right">Нет в наличии</h6>
+                        }
                     }
                 </form>
                 <span class="card-text">@Model.Description</span>

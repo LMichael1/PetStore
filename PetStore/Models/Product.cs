@@ -21,5 +21,7 @@ namespace PetStore.Models
         public string ImageId { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
+        [NotMapped]
+        public bool IsInStock { get; set; } = false;
     }
 }

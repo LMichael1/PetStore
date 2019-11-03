@@ -23,3 +23,32 @@
         }
     </div>
 </div>
+<div class="card text-center mt-2">
+    <div class="card-body">
+        <h5 class="card-title">Фильтр</h5>
+        <form asp-action="List" asp-controller="Product" method="post">
+            <h6>Категории</h6>
+            @foreach (string category in Model)
+            {
+                <div class="form-check">
+                    <input name="categories" class="form-check-input" type="checkbox" value="@category" id="defaultCheck">
+                    <label class="form-check-label" for="defaultCheck">
+                        @category
+                    </label>
+                </div>
+            }
+            <br />
+            <h6>Цена</h6>
+            <div class="form-row">
+                <div class="col">
+                    <input name="minPrice" type="number" min="0" placeholder="Мин" class="form-control">
+                </div>
+                <div class="col">
+                    <input name="maxPrice" type="number" min="0" placeholder="Макс" class="form-control">
+                </div>
+            </div>
+            <br />
+            <button class="btn btn-light rounded-pill" type="submit">Найти</button>
+        </form>
+    </div>
+</div>

@@ -13,13 +13,19 @@
             <h3 class="card-title">Количество заказов</h3>
             @foreach (var category in Model)
             {
-                var XLabels = Newtonsoft.Json.JsonConvert.SerializeObject(category.Charts.Select(x => x.DimensionOne).ToList());
-                var YValues = Newtonsoft.Json.JsonConvert.SerializeObject(category.Charts.Select(x => x.Quantity).ToList());
                 <h5>@category.Category</h5>
-                <div class="chart-container">
-                    <canvas id="@category.Category.GetHashCode()" style="width:100%; height:200px"></canvas>
-                </div>
-                <script type="text/javascript">
+                @if (category.Charts.Where(c => c.Quantity == 0).Count() == category.Charts.Count)
+                {
+                    <p>Нет заказов</p>
+                }
+                else
+                {
+                    var XLabels = Newtonsoft.Json.JsonConvert.SerializeObject(category.Charts.Select(x => x.DimensionOne).ToList());
+                    var YValues = Newtonsoft.Json.JsonConvert.SerializeObject(category.Charts.Select(x => x.Quantity).ToList());
+                    <div class="chart-container">
+                        <canvas id="@category.Category.GetHashCode()" style="width:100%; height:200px"></canvas>
+                    </div>
+                    <script type="text/javascript">
         $(function () {
     var chartName = "@category.Category.GetHashCode()";
          var ctx = document.getElementById(chartName).getContext('2d');
@@ -67,7 +73,8 @@
 
             });
         });
-                </script>
+                    </script>
+                }
             }
         </div>
     </div>

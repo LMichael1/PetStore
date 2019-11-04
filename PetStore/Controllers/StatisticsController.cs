@@ -57,7 +57,7 @@ namespace PetStore.Controllers
                 listModel.Add(model);
             }
 
-            return View(listModel);
+            return View(listModel.OrderBy(i => i.Category).ToList());
         }
     }
 }

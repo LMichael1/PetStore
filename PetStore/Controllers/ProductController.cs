@@ -40,11 +40,6 @@ namespace PetStore.Controllers
 
         public ViewResult List(FilterParametersProducts filter, int productPage = 1)
         {
-            //var products = _stockRepository.StockItems
-            //        .Where(p => p.Quantity > 0)
-            //        .Select(p => p.Product)
-            //        .Where(p => category == null || p.Category == category)
-            //        .OrderBy(p => p.ID);
             var products = _repository.Products;
             products = _filterConditions.GetProducts(products, filter);
 

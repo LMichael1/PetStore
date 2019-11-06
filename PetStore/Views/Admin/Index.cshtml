@@ -24,7 +24,7 @@
                     <tr>
                         <td class="text-right">@item.Product.ID</td>
                         <td>@item.Product.Name</td>
-                        <td class="text-right">@item.Product.Price.ToString("c")</td>
+                        <td class="text-right">@item.Product.Price.ToString("c", CultureInfo.GetCultureInfo("uk-UA"))</td>
                         <td class="text-right">@item.Quantity</td>
                         <td style="width:15%" class="text-center">
                             <form asp-action="Delete" method="post">

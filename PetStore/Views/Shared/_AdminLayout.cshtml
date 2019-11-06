@@ -23,8 +23,8 @@
         <a class="navbar-brand ml-3" asp-action="List"
            asp-controller="Product"
            asp-route-category="">
-            <img src="~/images/cropped-open-site-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            АПТЕЧНЫЙ СКЛАД
+            <img src="~/images/site-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            ЗООМАГАЗИН
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="col navbar-nav">
@@ -43,9 +43,9 @@
                 }
             </div>
             <div class="p-1 bg-light rounded rounded-pill shadow-sm">
-                <form class="form-inline">
+                <form asp-action="SearchList" asp-controller="Product" method="post" class="form-inline">
                     <div class="input-group">
-                        <input class="form-control form-control border-0 bg-light rounded rounded-pill" type="search" placeholder="Поиск" aria-label="Search">
+                        <input name="name" class="form-control form-control border-0 bg-light rounded rounded-pill" type="search" placeholder="Поиск" aria-label="Search">
                         <div class="input-group-append">
                             <button class="btn btn-link text-primary" type="submit"><i class="fa fa-search"></i></button>
                         </div>

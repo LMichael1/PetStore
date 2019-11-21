@@ -21,17 +21,21 @@
             <div class="card-body">
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Name"></label>
+                        <label asp-for="Name">Имя пользователя</label>
                     </h5>
                     <div><span asp-validation-for="Name" class="text-danger"></span></div>
                     <input asp-for="Name" class="form-control" />
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Password"></label>
+                        <label asp-for="Password">Пароль</label>
                     </h5>
                     <div><span asp-validation-for="Password" class="text-danger"></span></div>
                     <input asp-for="Password" class="form-control" />
+                </div>
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">Запомнить меня</label>
                 </div>
             </div>
         </div>

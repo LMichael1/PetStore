@@ -37,11 +37,31 @@ namespace PetStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = new ApplicationUser { UserName = model.Email, Email = model.Email, Birthday = model.Birthday };
+                ApplicationUser user = new ApplicationUser 
+                { 
+                    UserName = model.UserName, 
+                    Email = model.Email, 
+                    Birthday = model.Birthday 
+                };
+
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Login", "Account");
+                    // генерация токена для пользователя
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        new { userId = user.Id, code = code },
+                        protocol: HttpContext.Request.Scheme);
+                    EmailService emailService = new EmailService();
+                    await emailService.SendEmailAsync(model.Email, "Подтвердите Ваш аккаунт",
+                        $"Спасибо за регистрацию в нашем магазине! <br />Для того чтобы приступить к покупкам, подтвердите регистрацию, перейдя по ссылке. <br /><a href='{callbackUrl}'>Подтвердить!</a>");
+
+                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+
+                   // return RedirectToAction("Login", "Account");
                 }
                 else
                 {
@@ -52,6 +72,26 @@ namespace PetStore.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return RedirectToAction("List", "Product");
+            else
+                return View("Error");
         }
 
         [AllowAnonymous]
@@ -74,9 +114,15 @@ namespace PetStore.Controllers
                     await _userManager.FindByNameAsync(loginModel.Name);
                 if (user != null)
                 {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        return View(loginModel);
+                    }
+
                     await _signInManager.SignOutAsync();
                     if ((await _signInManager.PasswordSignInAsync(user,
-                            loginModel.Password, false, false)).Succeeded)
+                            loginModel.Password, loginModel.RememberMe, false)).Succeeded)
                     {
                         return Redirect(loginModel?.ReturnUrl ?? "/");
                     }

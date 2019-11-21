@@ -76,6 +76,14 @@ namespace PetStore.Controllers
             var products = _repository.Products;
             products = _filterConditions.GetProducts(products, filter);
 
+            foreach (var p in products)
+            {
+                if (_stockRepository.StockItems.FirstOrDefault(pr => pr.Product == p && pr.Quantity > 0) != null)
+                {
+                    p.IsInStock = true;
+                }
+            }
+
             var paging = new PagingInfo
             {
                 CurrentPage = productPage,

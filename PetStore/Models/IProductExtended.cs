@@ -10,5 +10,6 @@ namespace PetStore.Models
         IQueryable<ProductExtended> ProductExtended { get;}
         void SaveProductExtended(ProductExtended productExtended);
         ProductExtended DeleteProductExtended(int productExtendedID);
+        void SaveChanges();
     }
 }

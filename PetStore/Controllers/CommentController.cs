@@ -13,12 +13,14 @@ namespace PetStore.Controllers
     {
         #region private 
         private readonly ICommentRepository _commentRepository;
+        private readonly IProductExtended _productExtendedRepository;
         private int PageSize = 4;
         #endregion
 
-        public CommentController(ICommentRepository commentRepository)
+        public CommentController(ICommentRepository commentRepository, IProductExtended productExtendedRepository)
         {
             _commentRepository = commentRepository;
+            _productExtendedRepository = productExtendedRepository;
         }
 
         public ViewResult GetByProductId(int id, int commentPage = 1)
@@ -46,8 +48,10 @@ namespace PetStore.Controllers
             return View(commentViewModel);
         }
 
-        [HttpPut]
-        public IActionResult Create(Сomment comment)
+        public ViewResult Create() => View("Edit", new Сomment());
+
+        [HttpPost]
+        public IActionResult Create(Сomment comment, int productId)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -58,6 +62,10 @@ namespace PetStore.Controllers
             {
                 _commentRepository.SaveComment(comment);
 
+                _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
+                    .Comments.Add(comment);
+                _productExtendedRepository.SaveChanges();
+
                 return RedirectToAction("GetByProductId");
             }
             else
@@ -67,8 +75,11 @@ namespace PetStore.Controllers
             }
         }
 
+        public ViewResult Edit(int commentId) => 
+            View(_commentRepository.Сomment.FirstOrDefault(p => p.ID == commentId));
+
         [HttpPut]
-        public IActionResult Edit(Сomment comment)
+        public IActionResult Edit(Сomment comment, int productId)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -83,6 +94,13 @@ namespace PetStore.Controllers
             if (ModelState.IsValid)
             {
                 _commentRepository.SaveComment(comment);
+
+                var repositoryComment = _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
+                    .Comments.FirstOrDefault(p => p.ID == comment.ID);
+                repositoryComment.Message = comment.Message;
+                repositoryComment.Rating = comment.Rating;
+                repositoryComment.Time = DateTime.Now;
+                _productExtendedRepository.SaveChanges();
 
                 return RedirectToAction("GetByProductId");
             }

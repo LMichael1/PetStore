@@ -112,9 +112,11 @@ namespace PetStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int commentId)
+        public IActionResult Delete(int commentId, int productId)
         {
-            var comment = _commentRepository.Сomment.FirstOrDefault(p => p.ID == commentId);
+            var comment = _commentRepository.DeleteComment(commentId);
+            _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
+                .Comments.Remove(comment);
 
             if (!User.Identity.IsAuthenticated)
             {

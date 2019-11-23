@@ -12,6 +12,7 @@ namespace PetStore.Models.ViewModels
         public Cart Cart { get; set; }
         public string ReturnUrl { get; set; } 
         public int EditedLineId { get; set; }
+
         #endregion
     }
 }

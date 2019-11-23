@@ -15,7 +15,7 @@
         <div class="col-md">
             <div class="card-body">
                 <h5 class="card-title">
-                    @Model.Name
+                    <a asp-action="Info" asp-controller="Product" asp-route-productId="@Model.ID">@Model.Name</a>
                     <span class="badge badge-pill badge-primary" style="float:right">
                         <small>@Model.Price.ToString("c", CultureInfo.GetCultureInfo("uk-UA"))</small>
                     </span>

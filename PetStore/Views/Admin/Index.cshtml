@@ -58,6 +58,11 @@
         </table>
     </div>
 </div>
+<div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+     page-class="btn" page-class-normal="btn-light"
+     page-class-selected="btn-primary" page-url-categories="@Model.CurrentFilter.Categories"
+     class="btn-group mt-2">
+</div>
 <br />
 <div class="text-center">
     <a asp-action="Create" class="btn btn-primary btn-transparent rounded-pill">Добавить продукт</a>

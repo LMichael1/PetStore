@@ -36,7 +36,7 @@ namespace PetStore
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IProductExtended, EFProductExtendedRepository>();
+            services.AddTransient<IProductExtendedRepository, EFProductExtendedRepository>();
             services.AddTransient<ICommentRepository, EFCommentRepository>();
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddTransient<IStockRepository, EFStockRepository>();

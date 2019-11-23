@@ -22,6 +22,7 @@ namespace PetStore.Models
             if (user == null)
             {
                 user = new ApplicationUser("Admin");
+                user.EmailConfirmed = true;
                 await userManager.CreateAsync(user, adminPassword);
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
                 await roleManager.CreateAsync(new IdentityRole("Manager"));

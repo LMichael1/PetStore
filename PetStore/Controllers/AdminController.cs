@@ -17,14 +17,19 @@ namespace PetStore.Controllers
         private readonly ImagesDbContext _imagesDb;
         private IStockRepository _stockRepository;
         private IProductRepository _productRepository;
+        private IProductExtendedRepository _productExtendedRepository;
         private IFilterConditionsProducts _filterConditions;
         private int PageSize = 4;
 
-        public AdminController(IProductRepository repo, IStockRepository stockRepo, ImagesDbContext context,
-                    IFilterConditionsProducts filterConditions)
+        public AdminController(IProductRepository repo,
+                               IStockRepository stockRepo,
+                               IProductExtendedRepository productExtendedRepository,
+                               ImagesDbContext context,
+                               IFilterConditionsProducts filterConditions)
         {
             _productRepository = repo;
             _stockRepository = stockRepo;
+            _productExtendedRepository = productExtendedRepository;
             _imagesDb = context;
             _filterConditions = filterConditions;
         }
@@ -91,55 +96,115 @@ namespace PetStore.Controllers
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ViewResult Edit(int productId) =>
-            View(_productRepository.Products
-                .FirstOrDefault(p => p.ID == productId));
+        public IActionResult Edit(int productId)
+        {
+            var result = _productExtendedRepository.ProductExtended
+                .FirstOrDefault(p => p.Product.ID == productId);
+
+            if (result == null)
+            {
+                TempData["message"] = $"Ошибка";
+                return RedirectToAction("List");
+            }
+
+            return View(result);
+        }
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Edit(Product product)
+        public async Task<IActionResult> Create(ProductExtended productExtended)
         {
             if (ModelState.IsValid)
             {
-                if (product.Image != null)
+                if (productExtended.Image != null)
                 {
-                    var imageName = DateTime.Now.ToString() + product.Name;
-                    var image = await _imagesDb.StoreImage(product.Image.OpenReadStream(),
+                    var imageName = DateTime.Now.ToString() + productExtended.Product.Name;
+                    var image = await _imagesDb.StoreImage(productExtended.Product.Image.OpenReadStream(),
                                                             imageName);
 
-                    product.ImageId = image;
+                    productExtended.Product.ImageId = image;
                 }
 
-                _productRepository.SaveProduct(product);
-                TempData["message"] = $"{product.Name} был сохранен";
+                _productExtendedRepository.SaveProductExtended(productExtended);
 
-                if (_stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == product.ID) == null)
-                {
-                    _stockRepository.SaveStockItem(new Stock { Product = product, Quantity = 0 });
-                }
+                _stockRepository.SaveStockItem(new Stock { Product = productExtended.Product, Quantity = 0 });
+
+                TempData["message"] = $"{productExtended.Product.Name} был сохранен";
 
                 return RedirectToAction("Index");
             }
             else
             {
                 // there is something wrong with the data values
-                return View(product);
+                return View(productExtended);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> Edit(ProductExtended productExtended)
+        {
+            if (ModelState.IsValid)
+            {
+                if (productExtended.Product.ID <= 0)
+                {
+                    TempData["message"] = $"Ошибка сохранения";
+                    return RedirectToAction("Index");
+                }
+
+                var product = _productExtendedRepository.ProductExtended
+                    .FirstOrDefault(p => p.Product.ID == productExtended.Product.ID);
+
+                if (productExtended.Product.Image != null)
+                {
+                    var imageName = DateTime.Now.ToString() + productExtended.Product.Name;
+                    var image = await _imagesDb.StoreImage(productExtended.Product.Image.OpenReadStream(),
+                                                            imageName);
+
+                    productExtended.Product.ImageId = image;
+                }
+
+                product.Product.Name = productExtended.Product.Name;
+                product.Product.ImageId = productExtended.Product.ImageId;
+                product.Product.Price = productExtended.Product.Price;
+                product.Product.Category = productExtended.Product.Category;
+                product.Product.Description = productExtended.Product.Description;
+                product.LongDescription = productExtended.LongDescription;
+                product.Manufacturer = productExtended.Manufacturer;
+                product.OriginCountry = productExtended.OriginCountry;
+                product.Image = productExtended.Image;
+                product.Comments = productExtended.Comments;
+
+                _productExtendedRepository.SaveProductExtended(product);
+                TempData["message"] = $"{productExtended.Product.Name} был сохранен";
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(productExtended);
             }
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ViewResult Create() => View("Edit", new Product());
+        public ViewResult Create() => View(new ProductExtended());
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int productId)
         {
-            Stock deletedStock = _stockRepository.DeleteStockItem(productId);
-            Product deletedProduct = _productRepository.DeleteProduct(productId);
+            var stockId = _stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == productId).ID;
+            var deletedStock = _stockRepository.DeleteStockItem(stockId);
 
-            if (deletedProduct != null && deletedStock != null)
+            var extendedId = _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId).ID;
+            var deletedExtended = _productExtendedRepository.DeleteProductExtended(extendedId);
+
+            var deletedProduct = _productRepository.DeleteProduct(productId);
+
+            if (deletedProduct != null && deletedStock != null && deletedExtended != null)
             {
-                TempData["message"] = $"{deletedProduct.Name} was deleted";
+                TempData["message"] = $"{deletedProduct.Name} был удален";
             }
 
             return RedirectToAction("Index");

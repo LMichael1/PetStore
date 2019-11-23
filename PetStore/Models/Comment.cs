@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetStore.Models
 {
-    public class Сomment
+    public class Comment
     {
         [BindNever]
         public int ID { get; set; }

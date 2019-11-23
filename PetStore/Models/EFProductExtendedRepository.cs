@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace PetStore.Models
     public class EFProductExtendedRepository : IProductExtendedRepository
     {
         #region private
+
         private ApplicationDbContext _context;
+
         #endregion
 
-        public IQueryable<ProductExtended> ProductExtended => _context.ProductExtendeds;
+        public IQueryable<ProductExtended> ProductExtended => _context.ProductExtendeds.Include(i => i.Product).Include(i=>i.Comments);
 
         public EFProductExtendedRepository(ApplicationDbContext context)
         {
@@ -44,6 +47,10 @@ namespace PetStore.Models
                 {
                     dbEntry.Comments = productExtended.Comments;
                     dbEntry.Product = productExtended.Product;
+                    dbEntry.LongDescription = productExtended.LongDescription;
+                    dbEntry.Manufacturer = productExtended.Manufacturer;
+                    dbEntry.OriginCountry = productExtended.OriginCountry;
+                    dbEntry.Image = productExtended.Image;
                 }
             }
             _context.SaveChanges();

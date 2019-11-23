@@ -18,7 +18,7 @@ namespace PetStore.Controllers
         {
             _userManager = userMgr;
             _signInManager = signInMgr;
-            //  IdentitySeedData.EnsurePopulated(userMgr).Wait();
+            //IdentitySeedData.EnsurePopulated(userMgr).Wait();
         }
 
         [AllowAnonymous]

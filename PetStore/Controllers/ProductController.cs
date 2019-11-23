@@ -117,7 +117,7 @@ namespace PetStore.Controllers
             });
         }
 
-        public ViewResult GetById(int productId)
+        public ViewResult Info(int productId)
         {
             var result = _productExtendedRepository.ProductExtended
                     .FirstOrDefault(p => p.Product.ID == productId);
@@ -125,6 +125,11 @@ namespace PetStore.Controllers
             if (result == null)
             {
                 RedirectToAction("List");
+            }
+
+            if (_stockRepository.StockItems.FirstOrDefault(p => p.Product.ID == result.Product.ID && p.Quantity > 0) != null)
+            {
+                result.Product.IsInStock = true;
             }
 
             return View(result);

@@ -1,27 +1,17 @@
 ﻿@model ProductExtended
 @{
-    ViewBag.Title = "Редактировать товар";
+    ViewBag.Title = "Добавить товар";
     Layout = "_AdminLayout";
 }
 
 <div class="container-fluid w-50">
-    <form asp-action="Edit" enctype="multipart/form-data">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="card mt-2">
             <div class="card-body">
                 <h3 class="card-title">
                     Товар
                 </h3>
-                <input type="hidden" asp-for="ID" value="@Model.ID" />
-                <input type="hidden" asp-for="Product.ID" />
-                <input type="hidden" asp-for="Product.ImageId" />
-                @if (!String.IsNullOrWhiteSpace(Model.Product.ImageId))
-                {
-                    <img src="@Url.Action("GetImage", new { id=@Model.Product.ImageId })" class="rounded" height="200" alt="Товар" />
-                }
-                else
-                {
-                    <img src="~/images/pets.png" class="rounded" height="200" alt="Товар" />
-                }
+                <img src="~/images/pets.png" class="rounded" height="200" alt="Товар" />
                 <div class="form-group">
                     <h5 class="card-title">
                         <label asp-for="Product.Name">Название</label>

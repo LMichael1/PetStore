@@ -7,8 +7,8 @@ namespace PetStore.Models
 {
     public interface ICommentRepository
     {
-        IQueryable<Сomment> Сomment { get; }
-        void SaveComment(Сomment comment);
-        Сomment DeleteComment(int CommentID);
+        IQueryable<Comment> Сomment { get; }
+        void SaveComment(Comment comment);
+        Comment DeleteComment(int CommentID);
     }
 }

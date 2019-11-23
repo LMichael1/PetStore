@@ -12,6 +12,10 @@ namespace PetStore.Models
         [BindNever]
         public int ID { get; set; }
         public Product Product { get; set; }
-        public ICollection<Сomment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public string LongDescription { get; set; }
+        public string Manufacturer { get; set; }
+        public string OriginCountry { get; set; }
+        public string Image { get; set; }
     }
 }

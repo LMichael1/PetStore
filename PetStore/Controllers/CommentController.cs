@@ -13,56 +13,64 @@ namespace PetStore.Controllers
     {
         #region private 
         private readonly ICommentRepository _commentRepository;
-        private readonly IProductExtended _productExtendedRepository;
+        private readonly IProductExtendedRepository _productExtendedRepository;
         private int PageSize = 4;
         #endregion
 
-        public CommentController(ICommentRepository commentRepository, IProductExtended productExtendedRepository)
+        public CommentController(ICommentRepository commentRepository, IProductExtendedRepository productExtendedRepository)
         {
             _commentRepository = commentRepository;
             _productExtendedRepository = productExtendedRepository;
         }
 
-        public ViewResult GetByProductId(int id, int commentPage = 1)
-        {
-            var comments = _commentRepository.Сomment.Where(p => p.Product.ID == id);
+        //public ViewResult GetByProductId(int id, int commentPage = 1)
+        //{
+        //    var comments = _commentRepository.Сomment.Where(p => p.Product.ID == id);
 
-            if(comments.Count() == 0)
-            {
-                TempData["message_search"] = $"Поиск не дал результатов";
-            }
+        //    if(comments.Count() == 0)
+        //    {
+        //        TempData["message_search"] = $"Поиск не дал результатов";
+        //    }
 
-            var paging = new PagingInfo
-            {
-                CurrentPage = commentPage,
-                ItemsPerPage = PageSize,
-                TotalItems = comments.Count()
-            };
+        //    var paging = new PagingInfo
+        //    {
+        //        CurrentPage = commentPage,
+        //        ItemsPerPage = PageSize,
+        //        TotalItems = comments.Count()
+        //    };
 
-            var commentViewModel = new CommentViewModel()
-            {
-                Comments = comments,
-                PagingInfo = paging
-            };
+        //    var commentViewModel = new CommentViewModel()
+        //    {
+        //        Comments = comments,
+        //        PagingInfo = paging
+        //    };
 
-            return View(commentViewModel);
-        }
+        //    return View(commentViewModel);
+        //}
 
-        public ViewResult Create() => View("Edit", new Сomment());
+        public ViewResult Create(int productId) => View(new CommentViewModel { ProductId = productId });
 
         [HttpPost]
-        public IActionResult Create(Сomment comment, int productId)
+        public IActionResult Create(CommentViewModel commentModel)
         {
             if (!User.Identity.IsAuthenticated)
             {
-                RedirectToAction("Login");
+                return RedirectToAction("Login");
             }
 
             if (ModelState.IsValid)
             {
+                var comment = new Comment
+                {
+                    Message = commentModel.Message,
+                    Rating = commentModel.Rating,
+                    Time = DateTime.Now,
+                    UserName = User.Identity.Name
+                };
+
                 _commentRepository.SaveComment(comment);
 
-                _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
+                _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
                     .Comments.Add(comment);
                 _productExtendedRepository.SaveChanges();
 
@@ -71,7 +79,7 @@ namespace PetStore.Controllers
             else
             {
                 // there is something wrong with the data values
-                return View(comment);
+                return View(commentModel);
             }
         }
 
@@ -79,7 +87,7 @@ namespace PetStore.Controllers
             View(_commentRepository.Сomment.FirstOrDefault(p => p.ID == commentId));
 
         [HttpPut]
-        public IActionResult Edit(Сomment comment, int productId)
+        public IActionResult Edit(Comment comment, int productId)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -88,7 +96,7 @@ namespace PetStore.Controllers
 
             if(User.Identity.Name != comment.UserName)
             {
-                TempData["message_rights"] = $"Пользователь не имеет права редактировать комментарий";
+                TempData["message"] = $"Пользователь не имеет права редактировать комментарий";
             }
 
             if (ModelState.IsValid)
@@ -106,7 +114,6 @@ namespace PetStore.Controllers
             }
             else
             {
-                // there is something wrong with the data values
                 return View(comment);
             }
         }
@@ -122,13 +129,13 @@ namespace PetStore.Controllers
             {
                 RedirectToAction("Login");
             }
-            else if (User.Identity.Name != comment.UserName)
+            else if (User.Identity.Name != comment.UserName || !User.IsInRole("Admin"))
             {
-                TempData["message_rights"] = $"Пользователь не имеет права удалять комментарий";
+                TempData["message"] = $"Пользователь не имеет права удалять комментарий";
             }
             else
             {
-                TempData["message"] = $"{comment.Message} was deleted";
+                TempData["message"] = $"Комментарий удален";
             }
 
             return RedirectToAction("GetByProductId");

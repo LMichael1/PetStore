@@ -17,10 +17,10 @@ namespace PetStore.Models
             _context = context;
         }
 
-        public IQueryable<Сomment> Сomment => _context.Comments;
-        public Сomment DeleteComment(int CommentID)
+        public IQueryable<Comment> Сomment => _context.Comments;
+        public Comment DeleteComment(int CommentID)
         {
-            Сomment dbEntry = _context.Comments
+            Comment dbEntry = _context.Comments
             .FirstOrDefault(p => p.ID == CommentID);
             if (dbEntry != null)
             {
@@ -31,7 +31,7 @@ namespace PetStore.Models
             return dbEntry;
         }
 
-        public void SaveComment(Сomment comment)
+        public void SaveComment(Comment comment)
         {
             if (comment.ID == 0)
             {
@@ -39,7 +39,7 @@ namespace PetStore.Models
             }
             else
             {
-                Сomment dbEntry = _context.Comments
+                Comment dbEntry = _context.Comments
                     .FirstOrDefault(p => p.ID == comment.ID);
                 if (dbEntry != null)
                 {

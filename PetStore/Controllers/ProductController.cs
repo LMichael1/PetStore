@@ -21,6 +21,8 @@ namespace PetStore.Controllers
 
         private IStockRepository _stockRepository;
 
+        private IProductExtendedRepository _productExtendedRepository;
+
         private IFilterConditionsProducts _filterConditions;
 
         public int PageSize = 4;
@@ -29,11 +31,13 @@ namespace PetStore.Controllers
 
         public ProductController(IProductRepository repository,
                                 IStockRepository stockRepository,
+                                IProductExtendedRepository productExtendedRepository,
                                 ImagesDbContext context,
                                 IFilterConditionsProducts filterConditions)
         {
             _repository = repository;
             _stockRepository = stockRepository;
+            _productExtendedRepository = productExtendedRepository;
             _imagesDb = context;
             _filterConditions = filterConditions;
         }
@@ -111,6 +115,19 @@ namespace PetStore.Controllers
                     .Distinct()
                     .OrderBy(x => x).ToList()
             });
+        }
+
+        public ViewResult GetById(int productId)
+        {
+            var result = _productExtendedRepository.ProductExtended
+                    .FirstOrDefault(p => p.Product.ID == productId);
+
+            if (result == null)
+            {
+                RedirectToAction("List");
+            }
+
+            return View(result);
         }
 
         public async Task<ActionResult> GetImage(string id)

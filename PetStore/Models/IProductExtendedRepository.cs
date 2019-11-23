@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetStore.Models
 {
-    public interface IProductExtended
+    public interface IProductExtendedRepository
     {
         IQueryable<ProductExtended> ProductExtended { get;}
         void SaveProductExtended(ProductExtended productExtended);

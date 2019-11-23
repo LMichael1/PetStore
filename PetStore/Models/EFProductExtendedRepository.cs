@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetStore.Models
 {
-    public class EFProductExtendedRepository : IProductExtended
+    public class EFProductExtendedRepository : IProductExtendedRepository
     {
         #region private
         private ApplicationDbContext _context;

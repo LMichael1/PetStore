@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using PetStore.Models.MongoDb;
 using Microsoft.AspNetCore.Http;
 using System;
+using PetStore.Filters.FilterParameters;
+using PetStore.Filters;
+using PetStore.Models.ViewModels;
 
 namespace PetStore.Controllers
 {
@@ -13,26 +16,83 @@ namespace PetStore.Controllers
     {
         private readonly ImagesDbContext _imagesDb;
         private IStockRepository _stockRepository;
-        private IProductRepository _repository;
+        private IProductRepository _productRepository;
+        private IFilterConditionsProducts _filterConditions;
+        private int PageSize = 4;
 
-        public AdminController(IProductRepository repo, IStockRepository stockRepo, ImagesDbContext context)
+        public AdminController(IProductRepository repo, IStockRepository stockRepo, ImagesDbContext context,
+                    IFilterConditionsProducts filterConditions)
         {
-            _repository = repo;
+            _productRepository = repo;
             _stockRepository = stockRepo;
             _imagesDb = context;
+            _filterConditions = filterConditions;
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ViewResult Index()
+        public ViewResult Index(FilterParametersProducts filter, int productPage = 1)
         {
             ViewBag.Current = "Products";
+            var stock = _stockRepository.StockItems;
+            stock = _filterConditions.GetStockProducts(stock, filter);
 
-            return View(_stockRepository.StockItems);
+            var paging = new PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = PageSize,
+                TotalItems = filter.Categories == null ?
+                        stock.Count() :
+                        stock.Where(e =>
+                             filter.Categories.Contains(e.Product.Category)).Count()
+            };
+
+            return View(new AdminProductsListViewModel
+            {
+                Stock = stock
+                    .Skip((productPage - 1) * PageSize)
+                    .Take(PageSize),
+                PagingInfo = paging,
+                CurrentFilter = filter
+            });
+        }
+
+        public ViewResult SearchList(FilterParametersProducts filter, int productPage = 1)
+        {
+            var stock = _stockRepository.StockItems;
+            stock = _filterConditions.GetStockProducts(stock, filter);
+
+            var paging = new PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = PageSize,
+                TotalItems = filter.Categories == null ?
+                        stock.Count() :
+                        stock.Where(e =>
+                             filter.Categories.Contains(e.Product.Category)).Count()
+            };
+
+            if (stock.Count() == 0)
+            {
+                TempData["message_search"] = $"Поиск не дал результатов";
+            }
+
+            return View(new AdminProductsListViewModel
+            {
+                Stock = stock
+                    .Skip((productPage - 1) * PageSize)
+                    .Take(PageSize),
+                PagingInfo = paging,
+                CurrentFilter = filter,
+                Categories = _stockRepository.StockItems
+                    .Select(x => x.Product.Category)
+                    .Distinct()
+                    .OrderBy(x => x).ToList()
+            });
         }
 
         [Authorize(Roles = "Admin, Manager")]
         public ViewResult Edit(int productId) =>
-            View(_repository.Products
+            View(_productRepository.Products
                 .FirstOrDefault(p => p.ID == productId));
 
         [HttpPost]
@@ -50,7 +110,7 @@ namespace PetStore.Controllers
                     product.ImageId = image;
                 }
 
-                _repository.SaveProduct(product);
+                _productRepository.SaveProduct(product);
                 TempData["message"] = $"{product.Name} был сохранен";
 
                 if (_stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == product.ID) == null)
@@ -75,7 +135,7 @@ namespace PetStore.Controllers
         public IActionResult Delete(int productId)
         {
             Stock deletedStock = _stockRepository.DeleteStockItem(productId);
-            Product deletedProduct = _repository.DeleteProduct(productId);
+            Product deletedProduct = _productRepository.DeleteProduct(productId);
 
             if (deletedProduct != null && deletedStock != null)
             {
@@ -114,10 +174,10 @@ namespace PetStore.Controllers
             {
                 var image = await _imagesDb.StoreImage(uploadedFile.OpenReadStream(), uploadedFile.FileName);
 
-                Product product = _repository.Products.FirstOrDefault(p => p.ID == id);
+                Product product = _productRepository.Products.FirstOrDefault(p => p.ID == id);
                 product.ImageId = image;
 
-                _repository.SaveProduct(product);
+                _productRepository.SaveProduct(product);
                 TempData["message"] = $"{product.Name} был сохранен";
             }
 

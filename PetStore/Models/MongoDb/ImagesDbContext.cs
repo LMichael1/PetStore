@@ -17,7 +17,7 @@ namespace PetStore.Models.MongoDb
         public ImagesDbContext()
         {
             // строка подключения
-            string connectionString = "mongodb+srv://LMichael:123443215@cluster0-fhg01.azure.mongodb.net/test?retryWrites=true&w=majority";
+            string connectionString = "mongodb+srv://admin:123@cluster0-yxi0t.azure.mongodb.net/test?retryWrites=true&w=majority";
             var connection = new MongoUrlBuilder(connectionString);
             // получаем клиента для взаимодействия с базой данных
             MongoClient client = new MongoClient(connectionString);

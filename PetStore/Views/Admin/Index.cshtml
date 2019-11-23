@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Stock>
+﻿@model AdminProductsListViewModel
 @{
     ViewBag.Title = "Все товары";
     Layout = "_AdminLayout";
@@ -17,12 +17,12 @@
                     <th class="text-center">Действия</th>
                 </tr>
             </thead>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Stock)
             {
-                if (item.Product != null)
+                if (item != null)
                 {
                     <tr>
-                        <td class="text-right">@item.Product.ID</td>
+                        <td class="text-right">@item.ID</td>
                         <td>@item.Product.Name</td>
                         <td class="text-right">@item.Product.Price.ToString("c", CultureInfo.GetCultureInfo("uk-UA"))</td>
                         <td class="text-right">@item.Quantity</td>
@@ -41,7 +41,7 @@
                                 }
                             </form>
                             <form class="form-inline mt-2" asp-action="AddToStock" method="post">
-                                <input type="hidden" name="stockId" value="@item.ID" />
+                                <input type="hidden" name="stockId" value="@item.Product.ID" />
                                 <div class="input-group">
                                     <input type="number" name="Quantity" value="0" min="0" class="form-control form-control-sm rounded-pill" />
                                     <div class="input-group-append">

@@ -30,5 +30,27 @@ namespace PetStore.Filters
 
             return products;
         }
+
+        public IQueryable<Stock> GetStockProducts(IQueryable<Stock> stockProducts, FilterParametersProducts filter)
+        {
+            stockProducts = stockProducts.Where(p => filter.Categories == null || filter.Categories.Contains(p.Product.Category));
+
+            if (!String.IsNullOrEmpty(filter.Name))
+            {
+                stockProducts = stockProducts.Where(c => c.Product.Name.ToUpper().Contains(filter.Name.ToUpper()));
+            }
+
+            if (filter.MinPrice > 0)
+            {
+                stockProducts = stockProducts.Where(c => c.Product.Price >= filter.MinPrice);
+            }
+
+            if (filter.MaxPrice > 0)
+            {
+                stockProducts = stockProducts.Where(c => c.Product.Price <= filter.MaxPrice);
+            }
+
+            return stockProducts;
+        }
     }
 }

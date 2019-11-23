@@ -11,5 +11,7 @@ namespace PetStore.Filters
     {
         IQueryable<Product> GetProducts(IQueryable<Product> products,
                                     FilterParametersProducts filter);
+        IQueryable<Stock> GetStockProducts(IQueryable<Stock> stockProducts,
+                                    FilterParametersProducts filter);
     }
 }

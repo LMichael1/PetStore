@@ -23,12 +23,19 @@ namespace PetStore.Controllers
             _cart = cartService;
         }
 
+        public ViewResult MyList()
+        {
+            ViewBag.Current = "MyOrders";
+
+            return View(_repository.Orders.Where(o => o.UserName == User.Identity.Name).OrderByDescending(o => o.Date));
+        }
+
         [Authorize(Roles = "Admin, Manager")]
         public ViewResult List()
         {
             ViewBag.Current = "Orders";
 
-            return View(_repository.Orders.Where(o => !o.Shipped));
+            return View(_repository.Orders.Where(o => !o.Shipped && !o.Canceled).OrderByDescending(o => o.Date));
         }
 
         [Authorize(Roles = "Admin, Manager")]
@@ -36,7 +43,7 @@ namespace PetStore.Controllers
         {
             ViewBag.Current = "OrdersShipped";
 
-            return View(_repository.Orders.Where(o => o.Shipped));
+            return View(_repository.Orders.Where(o => o.Shipped).OrderByDescending(o => o.Date));
         }
 
         [HttpPost]
@@ -73,6 +80,21 @@ namespace PetStore.Controllers
             return RedirectToAction(nameof(List));
         }
 
+        [HttpPost]
+        public IActionResult Cancel(int orderID)
+        {
+            Order order = _repository.Orders
+                .FirstOrDefault(o => o.OrderID == orderID);
+
+            if(order!=null)
+            {
+                order.Canceled = true;
+                _repository.SaveOrder(order);
+            }
+
+            return RedirectToAction(nameof(MyList));
+        }
+
         public ViewResult Checkout() => View(new Order());
 
         [HttpPost]
@@ -86,6 +108,7 @@ namespace PetStore.Controllers
             if (ModelState.IsValid)
             {
                 order.Lines = _cart.Lines.ToArray();
+                order.UserName = User.Identity.Name;
 
                 _repository.SaveOrder(order);
 

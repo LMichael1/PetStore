@@ -15,6 +15,10 @@ namespace PetStore.Models
         public ICollection<CartLine> Lines { get; set; }
         [BindNever]
         public bool Shipped { get; set; }
+        [BindNever]
+        public bool Canceled { get; set; }
+
+        public string UserName { get; set; }
 
         public DateTime Date { get; set; }
 

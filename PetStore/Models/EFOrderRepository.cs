@@ -31,5 +31,17 @@ namespace PetStore.Models
 
             _context.SaveChanges();
         }
+
+        public Order DeleteOrder(int orderID)
+        {
+            var dbEntry = _context.Orders
+                .FirstOrDefault(o => o.OrderID == orderID);
+            if (dbEntry != null)
+            {
+                _context.Orders.Remove(dbEntry);
+                _context.SaveChanges();
+            }
+            return dbEntry;
+        }
     }
 }

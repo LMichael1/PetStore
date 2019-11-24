@@ -6,5 +6,6 @@ namespace PetStore.Models
     {
         IQueryable<Order> Orders { get; }
         void SaveOrder(Order order);
+        Order DeleteOrder(int orderId);
     }
 }

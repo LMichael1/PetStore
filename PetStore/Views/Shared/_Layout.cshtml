@@ -20,6 +20,10 @@
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="col navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="nav-item nav-link @(ViewBag.Current == "MyOrders" ? "active" : "")" asp-action="MyList" asp-controller="Order">Мои заказы</a>
+                }
                 @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                 {
                     <a class="nav-item nav-link @(ViewBag.Current == "Orders" ? "active" : "")" asp-action="List" asp-controller="Order">Заказы</a>

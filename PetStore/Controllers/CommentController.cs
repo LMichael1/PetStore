@@ -11,10 +11,12 @@ namespace PetStore.Controllers
 {
     public class CommentController : Controller
     {
-        #region private 
+        #region private
+
         private readonly ICommentRepository _commentRepository;
         private readonly IProductExtendedRepository _productExtendedRepository;
-        private int PageSize = 4;
+       // private int PageSize = 4;
+
         #endregion
 
         public CommentController(ICommentRepository commentRepository, IProductExtendedRepository productExtendedRepository)
@@ -48,14 +50,18 @@ namespace PetStore.Controllers
         //    return View(commentViewModel);
         //}
 
-        public ViewResult Create(int productId) => View(new CommentViewModel { ProductId = productId });
+        public ViewResult Create(int productId, string returnUrl) => View(new CommentViewModel
+        {
+            ProductId = productId,
+            ReturnUrl = returnUrl
+        });
 
         [HttpPost]
         public IActionResult Create(CommentViewModel commentModel)
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "Account", new { commentModel.ReturnUrl });
             }
 
             if (ModelState.IsValid)
@@ -70,75 +76,95 @@ namespace PetStore.Controllers
 
                 _commentRepository.SaveComment(comment);
 
-                _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
+                _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
                     .Comments.Add(comment);
                 _productExtendedRepository.SaveChanges();
 
-                return RedirectToAction("GetByProductId");
+                return Redirect(commentModel.ReturnUrl);
             }
             else
             {
-                // there is something wrong with the data values
-                return View(commentModel);
+                TempData["message"] = $"Ошибка";
+                return Redirect(commentModel.ReturnUrl);
             }
         }
 
-        public ViewResult Edit(int commentId) => 
-            View(_commentRepository.Сomment.FirstOrDefault(p => p.ID == commentId));
+        public ViewResult Edit(int commentId, string returnUrl)
+        {
+            var comment = _commentRepository.Сomment.FirstOrDefault(p => p.ID == commentId);
+            var productId = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Comments.Any(c => c.ID == commentId)).Product.ID;
 
-        [HttpPut]
-        public IActionResult Edit(Comment comment, int productId)
+            var result = new CommentViewModel
+            {
+                ID = comment.ID,
+                Message = comment.Message,
+                ProductId = productId,
+                UserName = comment.UserName,
+                Rating = comment.Rating,
+                Time = comment.Time,
+                ReturnUrl = returnUrl
+            };
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CommentViewModel commentModel, int id)
         {
             if (!User.Identity.IsAuthenticated)
             {
-                RedirectToAction("Login");
+                return RedirectToAction("Login", "Account", new { commentModel.ReturnUrl });
             }
 
-            if(User.Identity.Name != comment.UserName)
+            if (User.Identity.Name != commentModel.UserName || !User.IsInRole("Admin"))
             {
                 TempData["message"] = $"Пользователь не имеет права редактировать комментарий";
+
+                return Redirect(commentModel.ReturnUrl);
             }
 
             if (ModelState.IsValid)
             {
-                _commentRepository.SaveComment(comment);
+                var repositoryComment = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
+                    .Comments.FirstOrDefault(p => p.ID == id);
 
-                var repositoryComment = _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
-                    .Comments.FirstOrDefault(p => p.ID == comment.ID);
-                repositoryComment.Message = comment.Message;
-                repositoryComment.Rating = comment.Rating;
+                repositoryComment.Message = commentModel.Message;
+                repositoryComment.Rating = commentModel.Rating;
                 repositoryComment.Time = DateTime.Now;
+
                 _productExtendedRepository.SaveChanges();
 
-                return RedirectToAction("GetByProductId");
+                return Redirect(commentModel.ReturnUrl);
             }
             else
             {
-                return View(comment);
+                TempData["message"] = $"Ошибка";
+                return Redirect(commentModel.ReturnUrl);
             }
         }
 
-        [HttpPost]
-        public IActionResult Delete(int commentId, int productId)
+        public IActionResult Delete(int commentId, string returnUrl)
         {
+            var productId = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Comments.Any(c => c.ID == commentId)).Product.ID;
             var comment = _commentRepository.DeleteComment(commentId);
-            _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId)
+            _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == productId)
                 .Comments.Remove(comment);
 
             if (!User.Identity.IsAuthenticated)
             {
-                RedirectToAction("Login");
-            }
-            else if (User.Identity.Name != comment.UserName || !User.IsInRole("Admin"))
-            {
-                TempData["message"] = $"Пользователь не имеет права удалять комментарий";
-            }
-            else
-            {
-                TempData["message"] = $"Комментарий удален";
+                return RedirectToAction("Login", "Account", new { returnUrl });
             }
 
-            return RedirectToAction("GetByProductId");
+            if (User.Identity.Name != comment.UserName || !User.IsInRole("Admin"))
+            {
+                TempData["message"] = $"Пользователь не имеет права удалять комментарий";
+
+                return Redirect(returnUrl);
+            }
+
+            TempData["message"] = $"Комментарий удален";
+
+            return Redirect(returnUrl);
         }
     }
 }

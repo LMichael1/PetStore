@@ -14,7 +14,7 @@ namespace PetStore.Models
 
         #endregion
 
-        public IQueryable<ProductExtended> ProductExtended => _context.ProductExtendeds.Include(i => i.Product).Include(i=>i.Comments);
+        public IQueryable<ProductExtended> ProductsExtended => _context.ProductsExtended.Include(i => i.Product).Include(i=>i.Comments);
 
         public EFProductExtendedRepository(ApplicationDbContext context)
         {
@@ -23,11 +23,11 @@ namespace PetStore.Models
 
         public ProductExtended DeleteProductExtended(int productExtendedID)
         {
-            ProductExtended dbEntry = _context.ProductExtendeds
+            ProductExtended dbEntry = _context.ProductsExtended
             .FirstOrDefault(p => p.ID == productExtendedID);
             if (dbEntry != null)
             {
-                _context.ProductExtendeds.Remove(dbEntry);
+                _context.ProductsExtended.Remove(dbEntry);
                 _context.SaveChanges();
             }
             return dbEntry;
@@ -37,11 +37,11 @@ namespace PetStore.Models
         {
             if (productExtended.ID == 0)
             {
-                _context.ProductExtendeds.Add(productExtended);
+                _context.ProductsExtended.Add(productExtended);
             }
             else
             {
-                ProductExtended dbEntry = _context.ProductExtendeds
+                ProductExtended dbEntry = _context.ProductsExtended
                     .FirstOrDefault(p => p.ID == productExtended.ID);
                 if (dbEntry != null)
                 {

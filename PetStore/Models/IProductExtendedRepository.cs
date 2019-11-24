@@ -7,7 +7,7 @@ namespace PetStore.Models
 {
     public interface IProductExtendedRepository
     {
-        IQueryable<ProductExtended> ProductExtended { get;}
+        IQueryable<ProductExtended> ProductsExtended { get;}
         void SaveProductExtended(ProductExtended productExtended);
         ProductExtended DeleteProductExtended(int productExtendedID);
         void SaveChanges();

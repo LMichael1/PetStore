@@ -119,7 +119,7 @@ namespace PetStore.Controllers
 
         public ViewResult Info(int productId)
         {
-            var result = _productExtendedRepository.ProductExtended
+            var result = _productExtendedRepository.ProductsExtended
                     .FirstOrDefault(p => p.Product.ID == productId);
 
             if (result == null)

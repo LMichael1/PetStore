@@ -2,6 +2,7 @@
 
 <form asp-action="Create" asp-controller="Comment" method="post">
     <input type="hidden" asp-for="ProductId" value="@Model.ProductId" />
+    <input type="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl" />
     <div class="card mt-2">
         <div class="card-body">
             <h5 class="card-title">

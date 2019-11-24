@@ -12,7 +12,7 @@ namespace PetStore.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<Stock> StockItems { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<ProductExtended> ProductExtendeds { get; set; }
+        public DbSet<ProductExtended> ProductsExtended { get; set; }
         #endregion
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

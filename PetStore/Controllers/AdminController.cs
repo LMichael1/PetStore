@@ -98,7 +98,7 @@ namespace PetStore.Controllers
         [Authorize(Roles = "Admin, Manager")]
         public IActionResult Edit(int productId)
         {
-            var result = _productExtendedRepository.ProductExtended
+            var result = _productExtendedRepository.ProductsExtended
                 .FirstOrDefault(p => p.Product.ID == productId);
 
             if (result == null)
@@ -152,7 +152,7 @@ namespace PetStore.Controllers
                     return RedirectToAction("Index");
                 }
 
-                var product = _productExtendedRepository.ProductExtended
+                var product = _productExtendedRepository.ProductsExtended
                     .FirstOrDefault(p => p.Product.ID == productExtended.Product.ID);
 
                 if (productExtended.Product.Image != null)
@@ -197,7 +197,7 @@ namespace PetStore.Controllers
             var stockId = _stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == productId).ID;
             var deletedStock = _stockRepository.DeleteStockItem(stockId);
 
-            var extendedId = _productExtendedRepository.ProductExtended.FirstOrDefault(p => p.Product.ID == productId).ID;
+            var extendedId = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == productId).ID;
             var deletedExtended = _productExtendedRepository.DeleteProductExtended(extendedId);
 
             var deletedProduct = _productRepository.DeleteProduct(productId);

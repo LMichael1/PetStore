@@ -17,6 +17,5 @@ namespace PetStore.Models
         public int Rating { get; set; }
         public DateTime Time { get; set; }
         public string UserName { get; set; }
-        public Product Product { get; set; }
     }
 }

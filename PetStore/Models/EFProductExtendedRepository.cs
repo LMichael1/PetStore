@@ -24,9 +24,13 @@ namespace PetStore.Models
         public ProductExtended DeleteProductExtended(int productExtendedID)
         {
             ProductExtended dbEntry = _context.ProductsExtended
-            .FirstOrDefault(p => p.ID == productExtendedID);
+                .FirstOrDefault(p => p.ID == productExtendedID);
             if (dbEntry != null)
             {
+                foreach (var c in dbEntry.Comments)
+                {
+                    _context.Comments.Remove(c);
+                }
                 _context.ProductsExtended.Remove(dbEntry);
                 _context.SaveChanges();
             }

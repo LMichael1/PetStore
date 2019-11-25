@@ -9,6 +9,7 @@ using System;
 using PetStore.Filters.FilterParameters;
 using PetStore.Filters;
 using PetStore.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace PetStore.Controllers
 {
@@ -18,18 +19,21 @@ namespace PetStore.Controllers
         private IStockRepository _stockRepository;
         private IProductRepository _productRepository;
         private IProductExtendedRepository _productExtendedRepository;
+        private IOrderRepository _orderRepository;
         private IFilterConditionsProducts _filterConditions;
         private int PageSize = 4;
 
         public AdminController(IProductRepository repo,
                                IStockRepository stockRepo,
                                IProductExtendedRepository productExtendedRepository,
+                               IOrderRepository orderRepository,
                                ImagesDbContext context,
                                IFilterConditionsProducts filterConditions)
         {
             _productRepository = repo;
             _stockRepository = stockRepo;
             _productExtendedRepository = productExtendedRepository;
+            _orderRepository = orderRepository;
             _imagesDb = context;
             _filterConditions = filterConditions;
         }
@@ -194,6 +198,12 @@ namespace PetStore.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int productId)
         {
+            List<int> ids = _orderRepository.Orders.Where(o => o.Lines.Any(l => l.Product.ID == productId)).Select(o => o.OrderID).ToList();
+            foreach (var id in ids)
+            {
+                var deletedOrder = _orderRepository.DeleteOrder(id);
+            }
+
             var stockId = _stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == productId).ID;
             var deletedStock = _stockRepository.DeleteStockItem(stockId);
 

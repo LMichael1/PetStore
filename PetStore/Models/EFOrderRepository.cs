@@ -35,9 +35,12 @@ namespace PetStore.Models
         public Order DeleteOrder(int orderID)
         {
             var dbEntry = _context.Orders
+                .Include(o => o.Lines)
                 .FirstOrDefault(o => o.OrderID == orderID);
             if (dbEntry != null)
             {
+                dbEntry.Lines.Clear();
+
                 _context.Orders.Remove(dbEntry);
                 _context.SaveChanges();
             }

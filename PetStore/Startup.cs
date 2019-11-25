@@ -41,6 +41,7 @@ namespace PetStore
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddTransient<IStockRepository, EFStockRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
+            services.AddTransient<ICategoryRepository, EFCategoryRepository>();
             services.AddTransient<IFilterConditionsProducts, FilterConditionsProducts>();
             services.AddTransient<ImagesDbContext>();
             services.AddScoped(sp => SessionCart.GetCart(sp));

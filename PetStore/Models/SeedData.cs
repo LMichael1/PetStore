@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace PetStore.Models
 {
@@ -239,8 +240,39 @@ namespace PetStore.Models
 
                 #endregion
 
+                var category1 = new CategoryNode
+                {
+                    Name = "Все товары",
+                    IsRoot = true,
+                    Children = new List<CategoryNode>()
+                };
+
+                var category2 = new CategoryNode
+                {
+                    Name = "Товары для собак"
+                };
+
+                category1.Children.Add(category2);
+
+                var category3 = new CategoryNode
+                {
+                    Name = "Товары для попугаев",
+                    Children = new List<CategoryNode>()
+                };
+
+                var category4 = new CategoryNode
+                {
+                    Name = "Корма"
+                };
+
+                category3.Children.Add(category4);
+
+                category1.Children.Add(category3);
+
+                context.Categories.Add(category1);
+
                 context.ProductsExtended.AddRange(p1, p2, p3, p4, p5, p6, p7, p8, p9);
-                context.SaveChanges();
+
                 context.StockItems.AddRange(
                     new Stock { Product = p1.Product, Quantity = 10 },
                     new Stock { Product = p2.Product, Quantity = 5 },

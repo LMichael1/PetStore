@@ -37,6 +37,7 @@
                     <a class="nav-item nav-link @(ViewBag.Current == "Orders" ? "active" : "")" asp-action="List" asp-controller="Order">Заказы</a>
                     <a class="nav-item nav-link @(ViewBag.Current == "OrdersShipped" ? "active" : "")" asp-action="ListShipped" asp-controller="Order">Обработанные заказы</a>
                     <a class="nav-item nav-link @(ViewBag.Current == "Products" ? "active" : "")" asp-action="Index" asp-controller="Admin">Товары</a>
+                    <a class="nav-item nav-link @(ViewBag.Current == "Categories" ? "active" : "")" asp-action="List" asp-controller="Category">Категории</a>
                     <a class="nav-item nav-link @(ViewBag.Current == "Statistics" ? "active" : "")" asp-action="Index" asp-controller="Statistics">Статистика</a>
 
                 }

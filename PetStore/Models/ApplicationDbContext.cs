@@ -13,6 +13,7 @@ namespace PetStore.Models
         public DbSet<Stock> StockItems { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ProductExtended> ProductsExtended { get; set; }
+        public DbSet<CategoryNode> Categories { get; set; }
 
         #endregion
 

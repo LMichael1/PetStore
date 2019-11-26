@@ -103,13 +103,74 @@ namespace PetStore.Models
 
                 #region PetStore
 
+                var category1 = new CategoryNode
+                {
+                    Name = "Все товары",
+                    IsRoot = true,
+                    Children = new List<CategoryNode>()
+                };
+
+                var category2 = new CategoryNode
+                {
+                    Name = "Товары для кошек",
+                    Children = new List<CategoryNode>()
+                };
+
+                category1.Children.Add(category2);
+
+                var category3 = new CategoryNode
+                {
+                    Name = "Товары для птиц",
+                    Children = new List<CategoryNode>()
+                };
+
+                var category4 = new CategoryNode
+                {
+                    Name = "Корма"
+                };
+
+                category2.Children.Add(category4);
+
+                var category5 = new CategoryNode
+                {
+                    Name = "Клетки"
+                };
+
+                category3.Children.Add(category5);
+
+                var category6 = new CategoryNode
+                {
+                    Name = "Игрушки"
+                };
+
+                category3.Children.Add(category6);
+
+                var category7 = new CategoryNode
+                {
+                    Name = "Товары для рыб",
+                    Children = new List<CategoryNode>()
+                };
+
+                var category8 = new CategoryNode
+                {
+                    Name = "Аквариумы"
+                };
+
+                category7.Children.Add(category8);
+
+
+                category1.Children.Add(category3);
+                category1.Children.Add(category7);
+
+                context.Categories.Add(category1);
+
                 ProductExtended p1 = new ProductExtended
                 {
                     Product = new Product
                     {
                         Name = "Ferplast CAGE REKORD 4 WHITE Клетка для канареек и маленьких экзотических птиц",
                         Description = "Среди многочисленных клеток для птиц, выпускаемых компанией Ferplast, клетка Record 4 является удобной клеткой, выдержанной в традиционном стиле. Record 4 - прямоугольная клетка средних размеров, идеально подходит для канареек и экзотических маленьких птиц. Имеет очень прочный пластиковый поддон с выдвижным подносом для сбора мусора, облегчающим процесс ежедневной уборки. Record 4 идет в комплекте с аксессуарами, среди которых: пластиковые жердочки с резиновым покрытием, поворотные кормушки Brava 2, прищепки для подкормки, игрушка-зеркало с маленьким колокольчиком.",
-                        Category = "Клетки для птиц",
+                        Category = category5,
                         Price = 1970,
                         ImageId = ""
                     },
@@ -124,7 +185,7 @@ namespace PetStore.Models
                     {
                         Name = "Karlie-Flamingo Jambi КАРЛИ-ФЛАМИНГО ДЖАМБО клетка для птиц, канарейки, металл, белый",
                         Description = "Оптимальная клетка для канареек, волнистых попугаев Karlie-Flamingo (КАРЛИ-ФЛАМИНГО Джамбо) JAMBI с выдвижным пластиковым поддоном. Красивая и просторная клетка отличный выбор для канареек, волнистых попугаев и других. Имеет металлические прутья с белым покрытием, пластиковый выдвижной поддон для удобства очистки клетки, жердочки, кормушки. Клетка проста в применении, легко моется, не боится химических веществ.",
-                        Category = "Клетки для птиц",
+                        Category = category5,
                         Price = 469,
                         ImageId = ""
                     },
@@ -139,7 +200,7 @@ namespace PetStore.Models
                     {
                         Name = "Подвесное зеркало для попугаев в пластиковой рамке с колокольчиком Karlie-Flamingo (КАРЛИ-ФЛАМИНГО) LANTERN WITH BELL разнообразит досуг Вашего любимца, поможет сохранить активность и общительность.",
                         Description = "Подвесное зеркало для попугаев в пластиковой рамке с колокольчиком Karlie-Flamingo (КАРЛИ-ФЛАМИНГО) LANTERN WITH BELL разнообразит досуг Вашего любимца, поможет сохранить активность и общительность.",
-                        Category = "Игрушки для птиц",
+                        Category = category6,
                         Price = 78,
                         ImageId = ""
                     },
@@ -154,7 +215,7 @@ namespace PetStore.Models
                     {
                         Name = "Pet Pro СВЕТОФОР с колокольчиком игрушка для попугаев, акрил",
                         Description = "Светофор с колокольчиком, акриловая игрушка для попугаев. Очень яркий и красочный аксессуар птичьей клетки. Все материалы очень прочные и абсолютно безопасные для здоровья пернатых любимцев. Игрушка выполнена в виде светофора и ее детали не имеют острых углов. Металлический колокольчик будет сопровождать мелодичным звуком все контакты птицы с игрушкой, птица останется довольна. Игрушка подойдет для любой птичьей клетки, ее размер 23 см в длину.",
-                        Category = "Игрушки для птиц",
+                        Category = category6,
                         Price = 83,
                         ImageId = ""
                     },
@@ -169,7 +230,7 @@ namespace PetStore.Models
                     {
                         Name = "Tetra Аквариум Silhouette LED 12L",
                         Description = "Элегантный, дизайнерский аквариум Tetra Silhouette LED станет прекрасным подарком близким или же украшением Вашей квартиры или кабинета. Выполнен аквариум из высококачественного стекла, корое характеризуется прочностью и надежностью. Аквариум Tetra Silhouette – личается оригинальным дизайном и станет изюминкой в Вашем интерьере. Светодиодное освещение создает зрелищные эффекты подводного мира, а встроенная система фильтрации обеспечивает кристально чистую воду, безопасную для рыб.",
-                        Category = "Аквариумы",
+                        Category = category8,
                         Price = 3260,
                         ImageId = ""
                     },
@@ -184,7 +245,7 @@ namespace PetStore.Models
                     {
                         Name = "Edel Cat heart k Влажный корм для кошек с рыбой в деликатном томатном желе",
                         Description = "Edel Cat heart k с рыбой в деликатном томатном желе – влажный корм для кошек все пород. Полнорационный корм разработан с учётом всех особенностей организма взрослых кошек, поэтому продукт рекомендован всем питомцам, достигшим возраста 8 месяцев. Содержит комплекс витаминов и минералов для укрепления иммунитета, для красоты шерсти.",
-                        Category = "Корма для кошек",
+                        Category = category4,
                         Price = 31,
                         ImageId = ""
                     },
@@ -199,7 +260,7 @@ namespace PetStore.Models
                     {
                         Name = "1st Choice (Фест Чойс) КОТЕНОК сухой супер премиум корм для котят , 10 кг.",
                         Description = "1st Choice «Здоровый старт» - идеальная формула для начального прикорма котенка с 2 месяцев, когда он нуждается в новых источниках питания вместо материнского молока. При этом нет необходимости разделять котенка с мамой. 1st Choice для котят содержит все необходимое не только для растущего организма, но и для беременных и кормящих кошек. Оптимальное питание для старта в здоровую жизнь!",
-                        Category = "Корма для кошек",
+                        Category = category4,
                         Price = 2184,
                         ImageId = ""
                     },
@@ -214,7 +275,7 @@ namespace PetStore.Models
                     {
                         Name = "Arden Grange Adult Cat Fresh Salmon & Potato Корм беззерновой для взрослых кошек",
                         Description = "Arden Grange беззерновой для взрослых кошек, со свежим лососем и картофелем - это полноценное питание супер премиум класса для всех пород взрослых кошки с нормальным уровнем активности. Корм на основе ингридиентов наивысшего качества идеально подойдет для тех кошек, которым требуется дополнительный уход за кожей и шерстью. Корм содержит большое количество свежего лосося, который придает является источником легко усваивающихся протеинов и незаменимых натуральных жирных кислот.",
-                        Category = "Корма для кошек",
+                        Category = category4,
                         Price = 1749,
                         ImageId = ""
                     },
@@ -229,7 +290,7 @@ namespace PetStore.Models
                     {
                         Name = "Edel Cat k 100g паштет кролик",
                         Description = "Полнорационный корм разработан с учётом всех особенностей организма взрослых кошек. 100% натуральный корм приготовлен по новейшей высокотехнологичной рецептуре. Не содержит консервантов, антиоксидантов, красителей, ароматизаторов, усилителей вкуса, сои.",
-                        Category = "Корма для кошек",
+                        Category = category4,
                         Price = 20,
                         ImageId = ""
                     },
@@ -239,37 +300,6 @@ namespace PetStore.Models
                 };
 
                 #endregion
-
-                var category1 = new CategoryNode
-                {
-                    Name = "Все товары",
-                    IsRoot = true,
-                    Children = new List<CategoryNode>()
-                };
-
-                var category2 = new CategoryNode
-                {
-                    Name = "Товары для собак"
-                };
-
-                category1.Children.Add(category2);
-
-                var category3 = new CategoryNode
-                {
-                    Name = "Товары для попугаев",
-                    Children = new List<CategoryNode>()
-                };
-
-                var category4 = new CategoryNode
-                {
-                    Name = "Корма"
-                };
-
-                category3.Children.Add(category4);
-
-                category1.Children.Add(category3);
-
-                context.Categories.Add(category1);
 
                 context.ProductsExtended.AddRange(p1, p2, p3, p4, p5, p6, p7, p8, p9);
 

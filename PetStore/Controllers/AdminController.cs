@@ -20,8 +20,9 @@ namespace PetStore.Controllers
         private IProductRepository _productRepository;
         private IProductExtendedRepository _productExtendedRepository;
         private IOrderRepository _orderRepository;
+        private ICategoryRepository _categoryRepository;
         private IFilterConditionsProducts _filterConditions;
-        private int PageSize = 4;
+        private int PageSize = 10;
 
         public AdminController(IProductRepository repo,
                                IStockRepository stockRepo,
@@ -52,7 +53,7 @@ namespace PetStore.Controllers
                 TotalItems = filter.Categories == null ?
                         stock.Count() :
                         stock.Where(e =>
-                             filter.Categories.Contains(e.Product.Category)).Count()
+                             filter.Categories.Contains(e.Product.Category.ID)).Count()
             };
 
             return View(new AdminProductsListViewModel
@@ -77,7 +78,7 @@ namespace PetStore.Controllers
                 TotalItems = filter.Categories == null ?
                         stock.Count() :
                         stock.Where(e =>
-                             filter.Categories.Contains(e.Product.Category)).Count()
+                             filter.Categories.Contains(e.Product.Category.ID)).Count()
             };
 
             if (stock.Count() == 0)
@@ -171,7 +172,7 @@ namespace PetStore.Controllers
                 product.Product.Name = productExtended.Product.Name;
                 product.Product.ImageId = productExtended.Product.ImageId;
                 product.Product.Price = productExtended.Product.Price;
-                product.Product.Category = productExtended.Product.Category;
+                product.Product.Category = _categoryRepository.Categories.FirstOrDefault(c=>c.ID==productExtended.Product.Category.ID);
                 product.Product.Description = productExtended.Product.Description;
                 product.LongDescription = productExtended.LongDescription;
                 product.Manufacturer = productExtended.Manufacturer;

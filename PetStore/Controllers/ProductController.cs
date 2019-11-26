@@ -23,6 +23,8 @@ namespace PetStore.Controllers
 
         private IProductExtendedRepository _productExtendedRepository;
 
+        private ICategoryRepository _categoryRepository;
+
         private IFilterConditionsProducts _filterConditions;
 
         public int PageSize = 4;
@@ -32,18 +34,46 @@ namespace PetStore.Controllers
         public ProductController(IProductRepository repository,
                                 IStockRepository stockRepository,
                                 IProductExtendedRepository productExtendedRepository,
+                                ICategoryRepository categoryRepository,
                                 ImagesDbContext context,
                                 IFilterConditionsProducts filterConditions)
         {
             _repository = repository;
             _stockRepository = stockRepository;
             _productExtendedRepository = productExtendedRepository;
+            _categoryRepository = categoryRepository;
             _imagesDb = context;
             _filterConditions = filterConditions;
         }
 
         public ViewResult List(FilterParametersProducts filter, int productPage = 1)
         {
+            if (filter.Categories != null)
+            {
+                int addedCount = 0;
+
+                do
+                {
+                    addedCount = 0;
+                    List<int> toAdd = new List<int>();
+
+                    foreach (int categoryID in filter.Categories)
+                    {
+                        foreach (var id in _categoryRepository.Categories
+                            .FirstOrDefault(c => c.ID == categoryID).Children
+                            .Where(c => !filter.Categories.Contains(c.ID))
+                            .Select(c => c.ID))
+                        {
+                            toAdd.Add(id);
+                            addedCount++;
+                        }
+                    }
+
+                    filter.Categories.AddRange(toAdd);
+                }
+                while (addedCount > 0);
+            }
+
             var products = _repository.Products;
             products = _filterConditions.GetProducts(products, filter);
 
@@ -62,7 +92,7 @@ namespace PetStore.Controllers
                 TotalItems = filter.Categories == null ?
                         products.Count() :
                         products.Where(e =>
-                             filter.Categories.Contains(e.Category)).Count()
+                             filter.Categories.Contains(e.Category.ID)).Count()
             };
 
             return View(new ProductsListViewModel
@@ -95,7 +125,7 @@ namespace PetStore.Controllers
                 TotalItems = filter.Categories == null ?
                         products.Count() :
                         products.Where(e =>
-                             filter.Categories.Contains(e.Category)).Count()
+                             filter.Categories.Contains(e.Category.ID)).Count()
             };
 
             if (products.Count() == 0)

@@ -1,5 +1,14 @@
 ﻿@model ProductsListViewModel
 
+@if (Model.Products.Count() == 0)
+{
+    <div class="card mt-2">
+        <div class="card-body">
+            Товары не найдены
+        </div>
+    </div>
+}
+
 @foreach (var product in Model.Products)
 {
     <partial name="ProductSummary" model="product" />

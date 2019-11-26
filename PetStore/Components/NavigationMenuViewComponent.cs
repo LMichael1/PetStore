@@ -8,11 +8,11 @@ namespace PetStore.Components
     {
         #region fields
 
-        private IProductRepository _repository; 
+        private ICategoryRepository _repository;
 
         #endregion
 
-        public NavigationMenuViewComponent(IProductRepository repository)
+        public NavigationMenuViewComponent(ICategoryRepository repository)
         {
             _repository = repository;
         }
@@ -21,10 +21,11 @@ namespace PetStore.Components
         {
             ViewBag.SelectedCategory = RouteData?.Values["category"];
 
-            return View(_repository.Products
-                .Select(x => x.Category)
-                .Distinct()
-                .OrderBy(x => x));
+            return View(_repository.Categories);
+            //return View(_repository.Products
+            //    .Select(x => x.Category)
+            //    .Distinct()
+            //    .OrderBy(x => x));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PetStore.Models
 
         #endregion
 
-        public IQueryable<ProductExtended> ProductsExtended => _context.ProductsExtended.Include(i => i.Product).Include(i=>i.Comments);
+        public IQueryable<ProductExtended> ProductsExtended => _context.ProductsExtended.Include(i=>i.Comments).Include(i => i.Product).ThenInclude(i=>i.Category);
 
         public EFProductExtendedRepository(ApplicationDbContext context)
         {

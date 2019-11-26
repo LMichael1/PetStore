@@ -17,7 +17,7 @@ namespace PetStore.Models
             ErrorMessage = "Введите положительную цену")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "Укажите категорию")]
-        public string Category { get; set; }
+        public CategoryNode Category { get; set; }
         public string ImageId { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }

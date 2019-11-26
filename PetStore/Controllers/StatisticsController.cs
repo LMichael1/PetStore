@@ -40,7 +40,7 @@ namespace PetStore.Controllers
             {
                 var model = new CategoriesChartViewModel();
 
-                var categoryItems = products.Where(p => p.Category == c);
+                var categoryItems = products.Where(p => p.Category.ID == c.ID);
                 foreach (var p in categoryItems)
                 {
                     model.Charts.Add(new SimpleChartViewModel
@@ -52,7 +52,7 @@ namespace PetStore.Controllers
                     });
                 }
 
-                model.Category = c;
+                model.Category = c.Name;
 
                 listModel.Add(model);
             }

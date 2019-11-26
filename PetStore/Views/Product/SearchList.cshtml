@@ -12,12 +12,12 @@
                 <form asp-action="SearchList" asp-controller="Product" method="post">
                     <input type="hidden" name="name" value="@Model.CurrentFilter.Name" />
                     <h6>Категории</h6>
-                    @foreach (string category in Model.Categories)
+                    @foreach (CategoryNode category in Model.Categories)
                     {
                         <div class="form-check">
                             <input name="categories" class="form-check-input" type="checkbox" value="@category" id="defaultCheck">
                             <label class="form-check-label" for="defaultCheck">
-                                @category
+                                @category.Name
                             </label>
                         </div>
                     }

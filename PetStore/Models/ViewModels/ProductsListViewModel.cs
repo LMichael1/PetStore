@@ -12,9 +12,9 @@ namespace PetStore.Models.ViewModels
 
         public IEnumerable<Product> Products { get; set; }
         public PagingInfo PagingInfo { get; set; }
-        public string CurrentCategory { get; set; } 
+        public CategoryNode CurrentCategory { get; set; } 
         public FilterParametersProducts CurrentFilter { get; set; }
-        public List<string> Categories { get; set; }
+        public List<CategoryNode> Categories { get; set; }
 
         #endregion
     }

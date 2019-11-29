@@ -1,4 +1,4 @@
-﻿@model ProductExtended
+﻿@model ProductWithCategoryViewModel
 @{
     ViewBag.Title = "Редактировать товар";
     Layout = "_AdminLayout";
@@ -11,12 +11,12 @@
                 <h3 class="card-title">
                     Товар
                 </h3>
-                <input type="hidden" asp-for="ID" value="@Model.ID" />
-                <input type="hidden" asp-for="Product.ID" />
-                <input type="hidden" asp-for="Product.ImageId" />
-                @if (!String.IsNullOrWhiteSpace(Model.Product.ImageId))
+                <input type="hidden" asp-for="ID" value="@Model.Product.ID" />
+                <input type="hidden" asp-for="Product.Product.ID" />
+                <input type="hidden" asp-for="Product.Product.ImageId" />
+                @if (!String.IsNullOrWhiteSpace(Model.Product.Product.ImageId))
                 {
-                    <img src="@Url.Action("GetImage", new { id=@Model.Product.ImageId })" class="rounded" height="200" alt="Товар" />
+                    <img src="@Url.Action("GetImage", new { id=@Model.Product.Product.ImageId })" class="rounded" height="200" alt="Товар" />
                 }
                 else
                 {
@@ -24,53 +24,58 @@
                 }
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Product.Name">Название</label>
+                        <label asp-for="Product.Product.Name">Название</label>
                     </h5>
-                    <div><span asp-validation-for="Product.Name" class="text-danger"></span></div>
-                    <input asp-for="Product.Name" class="form-control" />
+                    <div><span asp-validation-for="Product.Product.Name" class="text-danger"></span></div>
+                    <input asp-for="Product.Product.Name" class="form-control" />
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Product.Category.ID">Категория</label>
+                        <label asp-for="Product.Product.Category.ID">Категория</label>
                     </h5>
-                    <input asp-for="Product.Category.ID" class="form-control" />
+                    <select class="custom-select mr-sm-2" asp-for="Product.Product.Category.ID">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.ID">@category.Name</option>
+                        }
+                    </select>
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Manufacturer">Производитель</label>
+                        <label asp-for="Product.Manufacturer">Производитель</label>
                     </h5>
-                    <div><span asp-validation-for="Manufacturer" class="text-danger"></span></div>
-                    <input asp-for="Manufacturer" class="form-control" />
+                    <div><span asp-validation-for="Product.Manufacturer" class="text-danger"></span></div>
+                    <input asp-for="Product.Manufacturer" class="form-control" />
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="OriginCountry">Страна производства</label>
+                        <label asp-for="Product.OriginCountry">Страна производства</label>
                     </h5>
-                    <div><span asp-validation-for="OriginCountry" class="text-danger"></span></div>
-                    <input asp-for="OriginCountry" class="form-control" />
+                    <div><span asp-validation-for="Product.OriginCountry" class="text-danger"></span></div>
+                    <input asp-for="Product.OriginCountry" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <h5 class="card-title"><label asp-for="Product.Description">Описание</label></h5>
-                    <div><span asp-validation-for="Product.Description" class="text-danger"></span></div>
-                    <textarea asp-for="Product.Description" class="form-control"></textarea>
+                    <h5 class="card-title"><label asp-for="Product.Product.Description">Описание</label></h5>
+                    <div><span asp-validation-for="Product.Product.Description" class="text-danger"></span></div>
+                    <textarea asp-for="Product.Product.Description" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <h5 class="card-title"><label asp-for="LongDescription">Расширенное описание</label></h5>
-                    <div><span asp-validation-for="LongDescription" class="text-danger"></span></div>
-                    <textarea asp-for="LongDescription" class="form-control"></textarea>
+                    <h5 class="card-title"><label asp-for="Product.LongDescription">Расширенное описание</label></h5>
+                    <div><span asp-validation-for="Product.LongDescription" class="text-danger"></span></div>
+                    <textarea asp-for="Product.LongDescription" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Product.Price">Цена</label>
+                        <label asp-for="Product.Product.Price">Цена</label>
                     </h5>
-                    <div><span asp-validation-for="Product.Price" class="text-danger"></span></div>
-                    <input asp-for="Product.Price" class="form-control" />
+                    <div><span asp-validation-for="Product.Product.Price" class="text-danger"></span></div>
+                    <input asp-for="Product.Product.Price" class="form-control" />
                 </div>
                 <div class="form-group">
                     <h5 class="card-title">
-                        <label asp-for="Product.Image" class="control-label">Загрузить изображение</label>
+                        <label asp-for="Product.Product.Image" class="control-label">Загрузить изображение</label>
                     </h5>
-                    <input asp-for="Product.Image" type="file" name="Product.Image" class="form-control" />
+                    <input asp-for="Product.Product.Image" type="file" name="Product.Product.Image" class="form-control" />
                 </div>
             </div>
         </div>

@@ -125,7 +125,8 @@ namespace PetStore.Controllers
 
             if (ModelState.IsValid)
             {
-                var repositoryComment = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
+                var repositoryComment = _productExtendedRepository.ProductsExtended
+                    .FirstOrDefault(p => p.Product.ID == commentModel.ProductId)
                     .Comments.FirstOrDefault(p => p.ID == id);
 
                 repositoryComment.Message = commentModel.Message;
@@ -145,7 +146,8 @@ namespace PetStore.Controllers
 
         public IActionResult Delete(int commentId, string returnUrl)
         {
-            var productId = _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Comments.Any(c => c.ID == commentId)).Product.ID;
+            var productId = _productExtendedRepository.ProductsExtended
+                .FirstOrDefault(p => p.Comments.Any(c => c.ID == commentId)).Product.ID;
             var comment = _commentRepository.DeleteComment(commentId);
             _productExtendedRepository.ProductsExtended.FirstOrDefault(p => p.Product.ID == productId)
                 .Comments.Remove(comment);

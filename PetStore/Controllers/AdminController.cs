@@ -22,12 +22,13 @@ namespace PetStore.Controllers
         private IOrderRepository _orderRepository;
         private ICategoryRepository _categoryRepository;
         private IFilterConditionsProducts _filterConditions;
-        private int PageSize = 10;
+        private int PageSize = 5;
 
         public AdminController(IProductRepository repo,
                                IStockRepository stockRepo,
                                IProductExtendedRepository productExtendedRepository,
                                IOrderRepository orderRepository,
+                               ICategoryRepository categoryRepository,
                                ImagesDbContext context,
                                IFilterConditionsProducts filterConditions)
         {
@@ -35,6 +36,7 @@ namespace PetStore.Controllers
             _stockRepository = stockRepo;
             _productExtendedRepository = productExtendedRepository;
             _orderRepository = orderRepository;
+            _categoryRepository = categoryRepository;
             _imagesDb = context;
             _filterConditions = filterConditions;
         }
@@ -101,6 +103,45 @@ namespace PetStore.Controllers
         }
 
         [Authorize(Roles = "Admin, Manager")]
+        public ViewResult Create() => View(new ProductWithCategoryViewModel
+        {
+            Product = new ProductExtended(),
+            Categories = _categoryRepository.Categories
+        });
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> Create(ProductWithCategoryViewModel productExtended)
+        {
+            if (ModelState.IsValid)
+            {
+                if (productExtended.Product.Product.Image != null)
+                {
+                    var imageName = DateTime.Now.ToString() + productExtended.Product.Product.Name;
+                    var image = await _imagesDb.StoreImage(productExtended.Product.Product.Image.OpenReadStream(),
+                                                            imageName);
+
+                    productExtended.Product.Product.ImageId = image;
+                }
+
+                productExtended.Product.Product.Category = _categoryRepository.Categories.FirstOrDefault(c => c.ID == productExtended.Product.Product.Category.ID);
+
+                _productExtendedRepository.SaveProductExtended(productExtended.Product);
+
+                _stockRepository.SaveStockItem(new Stock { Product = productExtended.Product.Product, Quantity = 0 });
+
+                TempData["message"] = $"{productExtended.Product.Product.Name} был сохранен";
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(productExtended);
+            }
+        }
+
+        [Authorize(Roles = "Admin, Manager")]
         public IActionResult Edit(int productId)
         {
             var result = _productExtendedRepository.ProductsExtended
@@ -112,76 +153,48 @@ namespace PetStore.Controllers
                 return RedirectToAction("List");
             }
 
-            return View(result);
+            return View(new ProductWithCategoryViewModel { Categories = _categoryRepository.Categories, Product = result });
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Create(ProductExtended productExtended)
+        public async Task<IActionResult> Edit(ProductWithCategoryViewModel productExtended, int id)
         {
             if (ModelState.IsValid)
             {
-                if (productExtended.Image != null)
-                {
-                    var imageName = DateTime.Now.ToString() + productExtended.Product.Name;
-                    var image = await _imagesDb.StoreImage(productExtended.Product.Image.OpenReadStream(),
-                                                            imageName);
-
-                    productExtended.Product.ImageId = image;
-                }
-
-                _productExtendedRepository.SaveProductExtended(productExtended);
-
-                _stockRepository.SaveStockItem(new Stock { Product = productExtended.Product, Quantity = 0 });
-
-                TempData["message"] = $"{productExtended.Product.Name} был сохранен";
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                // there is something wrong with the data values
-                return View(productExtended);
-            }
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Edit(ProductExtended productExtended)
-        {
-            if (ModelState.IsValid)
-            {
-                if (productExtended.Product.ID <= 0)
+                if (productExtended.ID <= 0)
                 {
                     TempData["message"] = $"Ошибка сохранения";
                     return RedirectToAction("Index");
                 }
 
                 var product = _productExtendedRepository.ProductsExtended
-                    .FirstOrDefault(p => p.Product.ID == productExtended.Product.ID);
+                    .FirstOrDefault(p => p.Product.ID == productExtended.ID);
 
-                if (productExtended.Product.Image != null)
+                if (productExtended.Product.Product.Image != null)
                 {
-                    var imageName = DateTime.Now.ToString() + productExtended.Product.Name;
-                    var image = await _imagesDb.StoreImage(productExtended.Product.Image.OpenReadStream(),
+                    var imageName = DateTime.Now.ToString() + productExtended.Product.Product.Name;
+                    var image = await _imagesDb.StoreImage(productExtended.Product.Product.Image.OpenReadStream(),
                                                             imageName);
 
-                    productExtended.Product.ImageId = image;
+                    productExtended.Product.Product.ImageId = image;
                 }
 
-                product.Product.Name = productExtended.Product.Name;
-                product.Product.ImageId = productExtended.Product.ImageId;
-                product.Product.Price = productExtended.Product.Price;
-                product.Product.Category = _categoryRepository.Categories.FirstOrDefault(c=>c.ID==productExtended.Product.Category.ID);
-                product.Product.Description = productExtended.Product.Description;
-                product.LongDescription = productExtended.LongDescription;
-                product.Manufacturer = productExtended.Manufacturer;
-                product.OriginCountry = productExtended.OriginCountry;
-                product.Image = productExtended.Image;
-                product.Comments = productExtended.Comments;
+                product.Product.Name = productExtended.Product.Product.Name;
+                product.Product.ImageId = productExtended.Product.Product.ImageId;
+                product.Product.Price = productExtended.Product.Product.Price;
+                var category = _categoryRepository.Categories.FirstOrDefault(c => c.ID == productExtended.Product.Product.Category.ID);
+                product.Product.Category = category;
+                product.Product.Description = productExtended.Product.Product.Description;
+                product.LongDescription = productExtended.Product.LongDescription;
+                product.Manufacturer = productExtended.Product.Manufacturer;
+                product.OriginCountry = productExtended.Product.OriginCountry;
+                product.Image = productExtended.Product.Image;
+                product.Comments = productExtended.Product.Comments;
 
+                _productRepository.SaveProduct(product.Product);
                 _productExtendedRepository.SaveProductExtended(product);
-                TempData["message"] = $"{productExtended.Product.Name} был сохранен";
+                TempData["message"] = $"{productExtended.Product.Product.Name} был сохранен";
 
                 return RedirectToAction("Index");
             }
@@ -191,9 +204,6 @@ namespace PetStore.Controllers
                 return View(productExtended);
             }
         }
-
-        [Authorize(Roles = "Admin, Manager")]
-        public ViewResult Create() => View(new ProductExtended());
 
         [HttpPost]
         [Authorize(Roles = "Admin")]

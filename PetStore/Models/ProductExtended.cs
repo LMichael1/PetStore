@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,5 +18,7 @@ namespace PetStore.Models
         public string Manufacturer { get; set; }
         public string OriginCountry { get; set; }
         public string Image { get; set; }
+        [NotMapped]
+        public int ProductIdentifier { get; set; }
     }
 }

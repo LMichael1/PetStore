@@ -18,7 +18,6 @@ namespace PetStore.Controllers
         {
             _userManager = userMgr;
             _signInManager = signInMgr;
-            //IdentitySeedData.EnsurePopulated(userMgr).Wait();
         }
 
         [AllowAnonymous]
@@ -59,9 +58,7 @@ namespace PetStore.Controllers
                     await emailService.SendEmailAsync(model.Email, "Подтвердите Ваш аккаунт",
                         $"Спасибо за регистрацию в нашем магазине! <br />Для того чтобы приступить к покупкам, подтвердите регистрацию, перейдя по ссылке. <br /><a href='{callbackUrl}'>Подтвердить!</a>");
 
-                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-
-                   // return RedirectToAction("Login", "Account");
+                    return View("Completed");
                 }
                 else
                 {

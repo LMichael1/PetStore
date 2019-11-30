@@ -12,7 +12,8 @@
                     Товар
                 </h3>
                 <input type="hidden" asp-for="ID" value="@Model.Product.ID" />
-                <input type="hidden" asp-for="Product.Product.ID" />
+                <input type="hidden" asp-for="Product.Product.ID" value="@Model.Product.Product.ID" />
+                <input type="hidden" asp-for="Product.ProductIdentifier" value="@Model.Product.Product.ID" />
                 <input type="hidden" asp-for="Product.Product.ImageId" />
                 @if (!String.IsNullOrWhiteSpace(Model.Product.Product.ImageId))
                 {

@@ -169,7 +169,7 @@ namespace PetStore.Controllers
                 }
 
                 var product = _productExtendedRepository.ProductsExtended
-                    .FirstOrDefault(p => p.Product.ID == productExtended.ID);
+                    .FirstOrDefault(p => p.ID == productExtended.ID);
 
                 if (productExtended.Product.Product.Image != null)
                 {
@@ -180,6 +180,7 @@ namespace PetStore.Controllers
                     productExtended.Product.Product.ImageId = image;
                 }
 
+                product.Product.ID = productExtended.Product.ProductIdentifier;
                 product.Product.Name = productExtended.Product.Product.Name;
                 product.Product.ImageId = productExtended.Product.Product.ImageId;
                 product.Product.Price = productExtended.Product.Product.Price;
@@ -233,9 +234,9 @@ namespace PetStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public IActionResult AddToStock(int stockId, int quantity)
+        public IActionResult AddToStock(int productId, int quantity)
         {
-            var stock = _stockRepository.StockItems.FirstOrDefault(s => s.ID == stockId);
+            var stock = _stockRepository.StockItems.FirstOrDefault(s => s.Product.ID == productId);
 
             stock.Quantity += quantity;
             _stockRepository.SaveStockItem(stock);

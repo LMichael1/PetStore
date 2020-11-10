@@ -23,7 +23,7 @@ namespace PetStore.Models
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.gmail.com", 25, false);
+                await client.ConnectAsync("smtp.gmail.com", 465, true);
                 await client.AuthenticateAsync("testpochtaforme@gmail.com", "Xthtgfirf123");
                 await client.SendAsync(emailMessage);
 
